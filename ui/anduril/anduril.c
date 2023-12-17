@@ -287,7 +287,11 @@ void loop() {
 
     #ifdef USE_AUX_RGB_LEDS_WHILE_ON
         // display battery charge on RGB button during use
-        if (state == steady_state) {
+        if ((state == steady_state)
+        #ifdef USE_CHANNEL_USES_AUX
+        && (!channel_uses_aux(channel_mode))
+        #endif
+        ){
             #ifdef USE_AUX_THRESHOLD_CONFIG
             // only show voltage if feature is enabled and
             // we are above the configured minimum ramp level
