@@ -113,6 +113,10 @@
 #include "anduril/beacon-mode.h"
 #endif
 
+#ifdef USE_BEACONTOWER_MODE
+#include "anduril/beacontower-mode.h"
+#endif
+
 #ifdef USE_THERMAL_REGULATION
 #include "anduril/tempcheck-mode.h"
 #endif
@@ -187,6 +191,10 @@
 
 #ifdef USE_BEACON_MODE
 #include "anduril/beacon-mode.c"
+#endif
+
+#ifdef USE_BEACONTOWER_MODE
+#include "anduril/beacontower-mode.c"
 #endif
 
 #ifdef USE_THERMAL_REGULATION
