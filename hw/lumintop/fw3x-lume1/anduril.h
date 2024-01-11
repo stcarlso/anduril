@@ -1,5 +1,5 @@
 // lume1 for FW3x config options for Anduril
-// Copyright (C) 2020-2026 LoneOceans, Selene ToyKeeper
+// Copyright (C) 2020-2026 Loneoceans, Selene ToyKeeper
 // SPDX-License-Identifier: GPL-3.0-or-later
 #pragma once
 
@@ -20,18 +20,18 @@
 // DD FET: 8-bit PWM (but hardware can only handle 0 and MAX)
 #define PWM2_LEVELS  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255
 
+#define RAMP_SMOOTH_FLOOR 4
+#define RAMP_SMOOTH_CEIL 149
 #define MAX_1x7135           149
 #define DEFAULT_LEVEL        56
 #define MIN_THERM_STEPDOWN   50
 #define HALFSPEED_LEVEL      11
 #define QUARTERSPEED_LEVEL   2
 
-#define RAMP_SMOOTH_FLOOR    1
-#define RAMP_SMOOTH_CEIL     149
 // 10 33 56 79 102 125 [149]
-#define RAMP_DISCRETE_FLOOR  10
-#define RAMP_DISCRETE_CEIL   RAMP_SMOOTH_CEIL
-#define RAMP_DISCRETE_STEPS  7
+#define RAMP_DISCRETE_FLOOR 16
+#define RAMP_DISCRETE_CEIL  RAMP_SMOOTH_CEIL
+#define RAMP_DISCRETE_STEPS 6
 
 #define SIMPLE_UI_FLOOR      RAMP_DISCRETE_FLOOR
 #define SIMPLE_UI_CEIL       120
@@ -51,6 +51,17 @@
 
 #define USE_AUX_THRESHOLD_CONFIG
 
+// set this light to use stepped ramp by default (instead of smooth)
+#undef RAMP_STYLE
+#define RAMP_STYLE 1
+
+// disable smooth steps by default
+#ifdef USE_SMOOTH_STEPS
+#undef USE_SMOOTH_STEPS
+#endif
+
+//#define BCK_ON_DELAY 4
+
 // show each channel while it scroll by in the menu
 #define USE_CONFIG_COLORS
 
@@ -58,7 +69,7 @@
 #define DEFAULT_BLINK_CHANNEL  CM_MAIN
 
 // slow down party strobe; this driver can't pulse for too short a time
-#define PARTY_STROBE_ONTIME 1
+#define PARTY_STROBE_ONTIME 3
 
 // use aux red + aux blue for police strobe
 #define USE_POLICE_COLOR_STROBE_MODE
@@ -77,7 +88,21 @@
 #undef BLINK_AT_RAMP_MIDDLE
 #endif
 
-
 // can't reset the normal way because power is connected before the button
 #define USE_SOFT_FACTORY_RESET
+
+// RGB aux LEDs default behavior
+#ifdef RGB_LED_OFF_DEFAULT
+#undef RGB_LED_OFF_DEFAULT
+#endif
+#define RGB_LED_OFF_DEFAULT 0x37  // blinking, rainbow
+
+// a little extra boost for turbo
+#define TURBO_TEMP_EXTRA 5
+
+// enable long-blink as negative sign
+#define USE_LONG_BLINK_FOR_NEGATIVE_SIGN
+
+// enable Beacontower blinky mode 
+#define USE_BEACONTOWER_MODE
 
