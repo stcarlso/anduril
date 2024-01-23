@@ -8,20 +8,14 @@
 
 #ifdef HAS_AUX_LEDS
 inline void set_level_aux_leds(uint8_t level) {
-    #ifdef USE_AUX_THRESHOLD_CONFIG
-        #define AUX_BRIGHTNESS ((level > cfg.button_led_low_ramp_level) \
-            << (level > cfg.button_led_high_ramp_level))
-    #else
-        #define AUX_BRIGHTNESS ((level > 0) + (level > DEFAULT_LEVEL))
-    #endif
     #ifdef USE_INDICATOR_LED_WHILE_RAMPING
         // use side-facing aux LEDs while main LEDs are on
         if (! go_to_standby) {
         #ifdef USE_INDICATOR_LED
-            indicator_led(AUX_BRIGHTNESS);
+            indicator_led((level > 0) + (level > DEFAULT_LEVEL));
         #endif
         #ifdef USE_BUTTON_LED
-            button_led_set(AUX_BRIGHTNESS);
+            button_led_set((level > 0) + (level > DEFAULT_LEVEL));
         #endif
         }
     #else  // turn off front-facing aux LEDs while main LEDs are on
@@ -33,14 +27,11 @@ inline void set_level_aux_leds(uint8_t level) {
             #ifdef USE_AUX_RGB_LEDS
                 rgb_led_set(0);
                 #ifdef USE_BUTTON_LED
-                    button_led_set(AUX_BRIGHTNESS);
+                    button_led_set((level > 0) + (level > DEFAULT_LEVEL));
                 #endif
             #endif
         }
         #endif
-    #endif
-    #ifdef AUX_BRIGHTNESS
-    #undef AUX_BRIGHTNESS
     #endif
 }
 #endif  // ifdef HAS_AUX_LEDS
@@ -49,35 +40,18 @@ inline void set_level_aux_leds(uint8_t level) {
 // TODO: maybe move this stuff into FSM
 #include "anduril/aux-leds.h"  // for rgb_led_voltage_readout()
 inline void set_level_aux_rgb_leds(uint8_t level) {
-    if (
-        #ifdef USE_CHANNEL_USES_AUX
-        (!channel_uses_aux(channel_mode))
-        #else
-        (! go_to_standby)
-        #endif
-        ){
-        #ifdef USE_AUX_THRESHOLD_CONFIG
-        if (level > cfg.button_led_low_ramp_level) {
-            rgb_led_voltage_readout(level > cfg.button_led_high_ramp_level);
-        }
-        #else
+    if ((! go_to_standby)
+       #ifdef USE_CHANNEL_USES_AUX
+       && (!channel_uses_aux(channel_mode))
+       #endif
+       ){
         if (level > 0) {
             rgb_led_voltage_readout(level > USE_AUX_RGB_LEDS_WHILE_ON);
-        }
-        #endif
-        else {
-            rgb_led_set(0);
         }
         // some drivers can be wired with RGB or single color to button
         // ... so support both even though only one is connected
         #ifdef USE_BUTTON_LED
-            #ifdef USE_AUX_THRESHOLD_CONFIG
-            button_led_set(
-                    (level > cfg.button_led_low_ramp_level)
-                    << (level > cfg.button_led_high_ramp_level));
-            #else
             button_led_set((level > 0) + (level > DEFAULT_LEVEL));
-            #endif
         #endif
     }
 }
@@ -111,20 +85,20 @@ void set_level(uint8_t level) {
     #endif
 
     #ifdef USE_AUX_RGB_LEDS_WHILE_ON
-        #ifdef USE_CHANNEL_USES_AUX
-        if (!channel_uses_aux(channel_mode)) {
-            set_level_aux_rgb_leds(level);
-        }
-        #else
-        set_level_aux_rgb_leds(level);
-        #endif
+       #ifdef USE_CHANNEL_USES_AUX
+       if (!channel_uses_aux(channel_mode)) {
+         set_level_aux_rgb_leds(level);
+       }
+       #else
+       set_level_aux_rgb_leds(level);
+       #endif
 
     set_level_aux_rgb_leds(level);
     #endif
 
     if (0 == level) {
         set_level_zero();
-        #ifdef USE_CHANNEL_USES_AUX
+        #if(defined(USE_CHANNEL_USES_AUX) && defined(USE_AUX_RGB_LEDS))
             if (channel_uses_aux(channel_mode)){
                 rgb_led_set(0);
             }
@@ -132,6 +106,7 @@ void set_level(uint8_t level) {
     } else {
         // call the relevant hardware-specific set_level_*()
         SetLevelFuncPtr set_level_func = channels[channel_mode].set_level;
+        //when using set_level_func(), ramp levels start at 0 and go up to 149 instead of 1-150:
         set_level_func(level - 1);
     }
 
