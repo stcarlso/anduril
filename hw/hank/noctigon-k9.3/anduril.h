@@ -20,13 +20,17 @@
 
 // channel modes...
 // CM_CH1, CM_CH2, CM_BOTH, CM_BLEND, CM_AUTO
-// enable max brightness out of the box
-#define DEFAULT_CHANNEL_MODE           CM_BOTH
+// CH1 = flood, CH2 = throw on DM1.12
+#define DEFAULT_CHANNEL_MODE           CM_CH1
+
+// On DM1.12 it isn't very useful to have autotint
+#undef CHANNEL_MODES_ENABLED
+#define CHANNEL_MODES_ENABLED 0b0000000000001111
 
 #define USE_CONFIG_COLORS
 
-// blink numbers on the main LEDs by default (but allow user to change it)
-#define DEFAULT_BLINK_CHANNEL  CM_BOTH
+// blink numbers on the aux LEDs by default (but allow user to change it)
+#define DEFAULT_BLINK_CHANNEL  CM_AUXWHT
 
 #define POLICE_COLOR_STROBE_CH1        CM_CH1
 #define POLICE_COLOR_STROBE_CH2        CM_CH2
@@ -58,23 +62,26 @@
 // PWM_TOPS values for linear-only ramp
 #define PWM5_LEVELS 4096,3681,3247,2794,2328,1856,2937,2393,1860,2690,2273,1875,2281,1959,1658,1893,1646,1774,1569,1381,1466,1309,1166,1224,1104,996,1033,942,858,882,810,746,687,634,586,604,561,522,487,454,425,397,409,385,362,341,321,302,311,295,279,286,271,257,263,250,255,258,246,249,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255
 
-#define DEFAULT_LEVEL      65
+#define DEFAULT_LEVEL      33
 #define MAX_1x7135         120
 #define MAX_Nx7135         MAX_1x7135
 #define HALFSPEED_LEVEL    16
 #define QUARTERSPEED_LEVEL 8
 
-#define RAMP_SMOOTH_FLOOR  10  // level 1 is unreliable (?)
+#define RAMP_SMOOTH_FLOOR  4  // level 1 is unreliable (?)
 #define RAMP_SMOOTH_CEIL   120
-// 10, 28, 46, [65], 83, 101, 120
-#define RAMP_DISCRETE_FLOOR 10
+// 4 [33] 62 91 120
+#define RAMP_DISCRETE_FLOOR RAMP_SMOOTH_FLOOR
 #define RAMP_DISCRETE_CEIL  RAMP_SMOOTH_CEIL
-#define RAMP_DISCRETE_STEPS 7
+#define RAMP_DISCRETE_STEPS 5
 
-// 10, 37, [65], 92, 120
+// 4 [33] 62 91 120
 #define SIMPLE_UI_FLOOR  RAMP_DISCRETE_FLOOR
 #define SIMPLE_UI_CEIL   RAMP_DISCRETE_CEIL
 #define SIMPLE_UI_STEPS  5
+
+#define DEFAULT_MANUAL_MEMORY 33
+#define DEFAULT_MANUAL_MEMORY_TIMER 5
 
 // stop panicking at ~25% power or ~1000 lm
 #define THERM_FASTER_LEVEL 100
@@ -97,7 +104,7 @@
 
 // the power regulator is a bit slow, so push it harder for a quick response from off
 #define DEFAULT_JUMP_START_LEVEL 35
-#define BLINK_BRIGHTNESS 30
+#define BLINK_BRIGHTNESS 33
 #define BLINK_ONCE_TIME 12  // longer blink, since main LEDs are slow
 
 #define THERM_CAL_OFFSET 5
@@ -106,4 +113,3 @@
 #ifdef BLINK_AT_RAMP_MIDDLE
 #undef BLINK_AT_RAMP_MIDDLE
 #endif
-
