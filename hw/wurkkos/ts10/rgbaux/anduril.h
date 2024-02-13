@@ -40,23 +40,22 @@
 #define MIN_THERM_STEPDOWN 60
 #define HALFSPEED_LEVEL 11
 #define QUARTERSPEED_LEVEL 5
-#define DEFAULT_LEVEL 50
+#define DEFAULT_LEVEL 30
 
 #define RAMP_SMOOTH_FLOOR    1
-#define RAMP_SMOOTH_CEIL     130
-// 20 38 56 [75] 93 111 130
-// 10 30 50 70 [90] 110 130
-#define RAMP_DISCRETE_FLOOR  10
-#define RAMP_DISCRETE_CEIL   130
-#define RAMP_DISCRETE_STEPS  7
+#define RAMP_SMOOTH_CEIL     120
+// 1 [30] 60 90 120
+#define RAMP_DISCRETE_FLOOR  1
+#define RAMP_DISCRETE_CEIL   120
+#define RAMP_DISCRETE_STEPS  5
 
-// at Wurkkos's request, reduce the Simple UI ceiling a little bit
-// (i.e. not 150; original config had it at 144/150, or DD FET 204/255)
-// 20 47 [75] 102 130
-// 10 30 50 70 [90] 110 130
-#define SIMPLE_UI_FLOOR  10
-#define SIMPLE_UI_CEIL   130
-#define SIMPLE_UI_STEPS  7
+// 1 [30] 60 90 120
+#define SIMPLE_UI_FLOOR  1
+#define SIMPLE_UI_CEIL   120
+#define SIMPLE_UI_STEPS  5
+
+#define DEFAULT_MANUAL_MEMORY 30
+#define DEFAULT_MANUAL_MEMORY_TIMER 5
 
 // stop panicking at ~50% power
 #define THERM_FASTER_LEVEL 130  // throttle back faster when high
@@ -83,3 +82,15 @@
 // enable factory reset on 13H without loosening tailcap (required)
 #define USE_SOFT_FACTORY_RESET
 
+// Aux LEDs: Low Cyan (Standby) / Low Red (Locked out)
+#define INDICATOR_LED_DEFAULT_MODE ((3<<1) + 1)
+#define RGB_LED_OFF_DEFAULT 0x13
+#define RGB_LED_LOCKOUT_DEFAULT 0x10
+
+// Disable Turbo in all modes by default
+#undef DEFAULT_2C_STYLE
+#define DEFAULT_2C_STYLE 0
+#define DEFAULT_2C_STYLE_SIMPLE 0
+
+// No post-off voltage display by default
+#define DEFAULT_POST_OFF_VOLTAGE_SECONDS 0
