@@ -19,20 +19,22 @@
 #define HALFSPEED_LEVEL      14
 #define QUARTERSPEED_LEVEL   5
 
-#define RAMP_SMOOTH_FLOOR    1
-#define RAMP_SMOOTH_CEIL     120
-// 10 28 46 [65] 83 101 120
-#define RAMP_DISCRETE_FLOOR  10
+#define RAMP_SMOOTH_FLOOR    5
+#define RAMP_SMOOTH_CEIL     125
+// 5 35 [65] 95 125
+#define RAMP_DISCRETE_FLOOR  5
 #define RAMP_DISCRETE_CEIL   RAMP_SMOOTH_CEIL
-#define RAMP_DISCRETE_STEPS  7
+#define RAMP_DISCRETE_STEPS  5
 
-// at Sofirn's request, use max (150) for the Simple UI ceiling
+// 5 35 [65] 95 125
 #define SIMPLE_UI_FLOOR  RAMP_DISCRETE_FLOOR
-#define SIMPLE_UI_CEIL   150
+#define SIMPLE_UI_CEIL   RAMP_DISCRETE_CEIL
 #define SIMPLE_UI_STEPS  5
 
 // also at Sofirn's request, enable 2 click turbo (Anduril 1 style)
 #define DEFAULT_2C_STYLE 1
+#define DEFAULT_MANUAL_MEMORY 65
+#define DEFAULT_MANUAL_MEMORY_TIMER 5
 
 // stop panicking at ~75% power or ~3000 lm, this light has high thermal mass
 #define THERM_FASTER_LEVEL (RAMP_SIZE*9/10)  // throttle back faster when high
@@ -66,10 +68,6 @@
 
 // too big, remove stuff to make room
 #undef USE_SOS_MODE
-//#undef USE_RAMP_AFTER_MOON_CONFIG
-//#undef USE_RAMP_SPEED_CONFIG
-//#undef USE_VOLTAGE_CORRECTION
-//#undef USE_2C_STYLE_CONFIG
-//#undef USE_TACTICAL_STROBE_MODE
 #undef USE_TACTICAL_MODE
+#define USE_LIGHTNING_MODE
 
