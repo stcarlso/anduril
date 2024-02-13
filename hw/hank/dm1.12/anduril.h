@@ -29,7 +29,7 @@
 #define POLICE_COLOR_STROBE_CH1        CM_AUXRED
 #define POLICE_COLOR_STROBE_CH2        CM_AUXBLU
 
-// party strobe, tac strobe, police, lightning, candle, bike
+// tac strobe, police, candle
 #undef DEFAULT_STROBE_CHANNELS
-#define DEFAULT_STROBE_CHANNELS  CM_CH1,CM_CH2,CM_AUTO,CM_AUTO,CM_CH2,CM_CH1
+#define DEFAULT_STROBE_CHANNELS  CM_CH2,CM_AUTO,CM_CH2
 

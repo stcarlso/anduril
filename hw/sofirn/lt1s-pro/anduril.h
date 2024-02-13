@@ -116,8 +116,8 @@
 #undef  TACTICAL_LEVELS
 #define TACTICAL_LEVELS 120,30,(RAMP_SIZE+3)  // high, low, police strobe
 
-// party strobe, tac strobe, police, lightning, candle, bike
-#define DEFAULT_STROBE_CHANNELS  CM_WHITE,CM_RED,CM_AUTO3,CM_AUTO2,CM_AUTO3,CM_WHITE
+// tac strobe, police, candle
+#define DEFAULT_STROBE_CHANNELS  CM_WHITE,CM_AUTO3,CM_AUTO3
 
 // don't blink while ramping
 #ifdef BLINK_AT_RAMP_FLOOR

@@ -14,25 +14,23 @@
 #ifdef USE_AW2016
     // animated RGB aux LEDs
     #define RGB_LED_OFF_DEFAULT \
-        auxrgb_cfg_byte(aux_aw2016_breathing_e, aux_rgb_rainbow_e)
+        auxrgb_cfg_byte(aux_low_e, aux_rgb_voltage_e)
     #define RGB_LED_LOCKOUT_DEFAULT \
-        auxrgb_cfg_byte(aux_aw2016_breathing_fast_e, aux_rgb_voltage_e)
+        auxrgb_cfg_byte(aux_aw2016_breathing_e, aux_rgb_red_e)
 #else
     // passive RGB aux LEDs
     #define RGB_LED_OFF_DEFAULT \
-        auxrgb_cfg_byte(aux_low_e, aux_rgb_rainbow_e)
+        auxrgb_cfg_byte(aux_low_e, aux_rgb_voltage_e)
     #define RGB_LED_LOCKOUT_DEFAULT \
-        auxrgb_cfg_byte(aux_blinking_e, aux_rgb_voltage_e)
+        auxrgb_cfg_byte(aux_low_e, aux_rgb_red_e)
 #endif
 
 // maybe disable POVD by default since it confuses some customers
-//#define DEFAULT_POST_OFF_VOLTAGE_SECONDS  0
+// disable POVD by default
+#define DEFAULT_POST_OFF_VOLTAGE_SECONDS  0
 
 // Allow 3C (or 6C) in Simple UI (toggle smooth or stepped ramping)
 #define USE_SIMPLE_UI_RAMPING_TOGGLE
-
-// allow Aux Config and Strobe Modes in Simple UI
-#define USE_EXTENDED_SIMPLE_UI
 
 // Fireflies likes stepped ramp by default
 #ifdef RAMP_STYLE
@@ -46,4 +44,3 @@
 // doing "loosen, press, tighten, hold" is hard on many lights
 // so also do factory reset on "Off -> 13H"
 #define USE_SOFT_FACTORY_RESET
-
