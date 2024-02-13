@@ -126,6 +126,16 @@ uint8_t blink_num(uint8_t num) {
 #endif
 
 #ifdef USE_INDICATOR_LED
+
+// Fill in default ports if not specified in HWDEF
+#ifndef AUXLED_PORT
+#define AUXLED_PORT PORTB
+#endif
+
+#ifndef AUXLED_DDR
+#define AUXLED_DDR  DDRB
+#endif
+
 void indicator_led(uint8_t lvl) {
     switch (lvl) {
         // FIXME: move this logic to arch/*
@@ -161,27 +171,38 @@ void indicator_led(uint8_t lvl) {
         #else  // MCU is old tiny style, not newer mega style
 
         case 0:  // indicator off
-            DDRB &= 0xff ^ (1 << AUXLED_PIN);
-            PORTB &= 0xff ^ (1 << AUXLED_PIN);
+            AUXLED_DDR &= 0xff ^ (1 << AUXLED_PIN);
+            AUXLED_PORT &= 0xff ^ (1 << AUXLED_PIN);
+            #ifdef AUXLED_PUE
+            AUXLED_PUE &= 0xff ^ (1 << AUXLED_PIN);
+            #endif
             #ifdef AUXLED2_PIN  // second LED mirrors the first
-            DDRB &= 0xff ^ (1 << AUXLED2_PIN);
-            PORTB &= 0xff ^ (1 << AUXLED2_PIN);
+            AUXLED_DDR &= 0xff ^ (1 << AUXLED2_PIN);
+            AUXLED_PORT &= 0xff ^ (1 << AUXLED2_PIN);
             #endif
             break;
         case 1:  // indicator low
-            DDRB &= 0xff ^ (1 << AUXLED_PIN);
-            PORTB |= (1 << AUXLED_PIN);
+            AUXLED_DDR &= 0xff ^ (1 << AUXLED_PIN);
+            #ifdef AUXLED_PUE
+            AUXLED_PORT &= 0xff ^ (1 << AUXLED_PIN);
+            AUXLED_PUE |= (1 << AUXLED_PIN);
+            #else
+            AUXLED_PORT |= (1 << AUXLED_PIN);
+            #endif
             #ifdef AUXLED2_PIN  // second LED mirrors the first
-            DDRB &= 0xff ^ (1 << AUXLED2_PIN);
-            PORTB |= (1 << AUXLED2_PIN);
+            AUXLED_DDR &= 0xff ^ (1 << AUXLED2_PIN);
+            AUXLED_PORT |= (1 << AUXLED2_PIN);
             #endif
             break;
         default:  // indicator high
-            DDRB |= (1 << AUXLED_PIN);
-            PORTB |= (1 << AUXLED_PIN);
+            AUXLED_DDR |= (1 << AUXLED_PIN);
+            AUXLED_PORT |= (1 << AUXLED_PIN);
+            #ifdef AUXLED_PUE
+            AUXLED_PUE &= 0xff ^ (1 << AUXLED_PIN);
+            #endif
             #ifdef AUXLED2_PIN  // second LED mirrors the first
-            DDRB |= (1 << AUXLED2_PIN);
-            PORTB |= (1 << AUXLED2_PIN);
+            AUXLED_DDR |= (1 << AUXLED2_PIN);
+            AUXLED_PORT |= (1 << AUXLED2_PIN);
             #endif
             break;
 
