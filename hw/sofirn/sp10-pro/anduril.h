@@ -19,33 +19,26 @@
 #define MAX_1x7135         15
 #define HALFSPEED_LEVEL    15
 #define QUARTERSPEED_LEVEL 15
-#define DEFAULT_LEVEL      50
+#define DEFAULT_LEVEL      60
 
 #define RAMP_SMOOTH_FLOOR    1
-#define RAMP_SMOOTH_CEIL     150
-// 1 25 50 [75] 100 125 150
+#define RAMP_SMOOTH_CEIL     120
+// 1 30 [60] 90 120
 #define RAMP_DISCRETE_FLOOR  1
 #define RAMP_DISCRETE_CEIL   RAMP_SMOOTH_CEIL
-#define RAMP_DISCRETE_STEPS  7
+#define RAMP_DISCRETE_STEPS  5
 
-// at Sofirn's request, use max (150) for the Simple UI ceiling
-// 15 48 [82] 116 150
-#define SIMPLE_UI_FLOOR  MAX_1x7135
-#define SIMPLE_UI_CEIL   150
+// 1 30 [60] 90 120
+#define SIMPLE_UI_FLOOR  1
+#define SIMPLE_UI_CEIL   120
 #define SIMPLE_UI_STEPS   5
 
-// turn on at ~6 lm by default (level 50/150, or ramp step 2/5 or 3/7)
-// (also sets lockout mode 2H to a useful level)
-#define DEFAULT_MANUAL_MEMORY 50
-// reset to default after being off for 10 minutes
-#define DEFAULT_MANUAL_MEMORY_TIMER 10
+#define DEFAULT_MANUAL_MEMORY 60
+#define DEFAULT_MANUAL_MEMORY_TIMER 5
 
 // enable SOS in the blinkies group
 #define USE_SOS_MODE
 #define USE_SOS_MODE_IN_BLINKY_GROUP
-
-// Allow 3C in Simple UI for switching between smooth and stepped ramping
-#define USE_SIMPLE_UI_RAMPING_TOGGLE
 
 // and finally, set the default ramp style to Stepped
 #undef RAMP_STYLE
@@ -62,8 +55,8 @@
 // the default of 26 looks a bit flat, so increase it
 #define CANDLE_AMPLITUDE 50
 
-// enable 2 click turbo (replaces USE_2C_MAX_TURBO)
 #define DEFAULT_2C_STYLE 1
+#define DEFAULT_2C_STYLE_SIMPLE 1
 
 // don't blink during the ramp or at the ceiling
 #ifdef BLINK_AT_RAMP_MIDDLE
@@ -73,7 +66,7 @@
 #undef BLINK_AT_RAMP_CEIL
 #endif
 
+#define USE_SMOOTH_STEPS
 
 // enable factory reset on 13H without loosening tailcap
 #define USE_SOFT_FACTORY_RESET
-
