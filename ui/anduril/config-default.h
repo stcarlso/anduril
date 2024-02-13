@@ -56,7 +56,7 @@
 #define B_TIMING_OFF B_TIMEOUT_T
 
 // default ramp style: 0 = smooth, 1 = stepped
-#define RAMP_STYLE 0
+#define RAMP_STYLE 1
 
 // smooth ramp speed: 1, 2, 3, 4, ...  for 1X speed, 1/2, 1/3rd, 1/4th, ...
 #define USE_RAMP_SPEED_CONFIG
@@ -72,9 +72,9 @@
 //  or too short)
 #define MOON_TIMING_HINT  // only applies if B_TIMING_ON == B_PRESS_T
 // short blips while ramping
-#define BLINK_AT_RAMP_MIDDLE
+//#define BLINK_AT_RAMP_MIDDLE
 //#define BLINK_AT_RAMP_FLOOR
-#define BLINK_AT_RAMP_CEIL
+//#define BLINK_AT_RAMP_CEIL
 //#define BLINK_AT_STEPS  // whenever a discrete ramp mode is passed in smooth mode
 
 // Uncomment for Anduril1 "Ramp 2C" behavior:
@@ -90,6 +90,7 @@
 // 2 = A2 style: Off 2C = ceil, On 2C = ceil, Ramped ceil 2C = turbo
 // All styles allow momentary turbo in advanced UI
 //#define DEFAULT_2C_STYLE 2  // default to Anduril 2 style
+#define DEFAULT_2C_STYLE 1
 //#define DEFAULT_2C_STYLE_SIMPLE 0  // no turbo at all
 
 // make the ramps configurable by the user
@@ -153,13 +154,13 @@
 #define USE_VOLTAGE_CORRECTION
 
 // enable beacon mode
-#define USE_BEACON_MODE
+//#define USE_BEACON_MODE
 
 // enable/disable various strobe modes
-#define USE_BIKE_FLASHER_MODE
-#define USE_PARTY_STROBE_MODE
+//#define USE_BIKE_FLASHER_MODE
+//#define USE_PARTY_STROBE_MODE
 #define USE_TACTICAL_STROBE_MODE
-#define USE_LIGHTNING_MODE
+//#define USE_LIGHTNING_MODE
 #define USE_CANDLE_MODE
 
 // boring strobes nobody really likes, but sometimes flashlight companies want
@@ -181,7 +182,7 @@
 #define USE_MOMENTARY_MODE
 
 // enable tactical mode
-#define USE_TACTICAL_MODE
+//#define USE_TACTICAL_MODE
 
 
 // enable a shortcut for +10 in number entry mode
@@ -217,3 +218,6 @@
 
 // enable channel mode config prerequisites for channel_uses_aux()
 #define USE_CHANNEL_USES_AUX
+
+// by default, hold moon until another press and hold
+#define DEFAULT_DONT_RAMP_AFTER_MOON 1
