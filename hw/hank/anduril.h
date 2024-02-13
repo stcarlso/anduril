@@ -11,16 +11,19 @@
 #ifdef RGB_LED_OFF_DEFAULT
 #undef RGB_LED_OFF_DEFAULT
 #endif
-#define RGB_LED_OFF_DEFAULT 0x18  // low, rainbow
+// low, cyan
+#define RGB_LED_OFF_DEFAULT 0x13
+// low, red
+#define RGB_LED_LOCKOUT_DEFAULT 0x10
 
 // half a second per color in rainbow mode
-//#define RGB_RAINBOW_SPEED 0x03
+#define RGB_RAINBOW_SPEED 0x03
 
 // Allow 3C (or 6C) in Simple UI (toggle smooth or stepped ramping)
 #define USE_SIMPLE_UI_RAMPING_TOGGLE
 
 // allow Aux Config and Strobe Modes in Simple UI
-#define USE_EXTENDED_SIMPLE_UI
+//#define USE_EXTENDED_SIMPLE_UI
 
 // double click while on goes to full-power turbo, not ramp ceiling
 #define DEFAULT_2C_STYLE 1
@@ -28,3 +31,5 @@
 // for consistency with KR4 (not otherwise necessary though)
 #define USE_SOFT_FACTORY_RESET
 
+// No post-off voltage display by default
+#define DEFAULT_POST_OFF_VOLTAGE_SECONDS 0
