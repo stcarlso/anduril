@@ -99,8 +99,8 @@
 #undef USE_2C_STYLE_CONFIG
 //#undef USE_VOLTAGE_CORRECTION
 //#undef USE_CHANNEL_PER_STROBE
-// party strobe, tac strobe, lightning, candle, bike
-#define DEFAULT_STROBE_CHANNELS  CM_BOTH,CM_BOTH,CM_AUTO,CM_AUTO,CM_AUTO
+// tac strobe, candle
+#define DEFAULT_STROBE_CHANNELS  CM_BOTH,CM_AUTO
 
 // for consistency with other models
 #define USE_SOFT_FACTORY_RESET
