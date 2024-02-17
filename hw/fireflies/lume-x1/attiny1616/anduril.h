@@ -50,20 +50,24 @@
 #define HALFSPEED_LEVEL     20
 #define QUARTERSPEED_LEVEL  10
 
-#define DEFAULT_LEVEL  50
+#define DEFAULT_LEVEL  36
 #define MAX_1x7135     50
 
-#define RAMP_SMOOTH_FLOOR    1
-#define RAMP_SMOOTH_CEIL     130
+#define RAMP_SMOOTH_FLOOR    8
+#define RAMP_SMOOTH_CEIL     120
 
-#define RAMP_DISCRETE_FLOOR  10
-#define RAMP_DISCRETE_CEIL   130
-#define RAMP_DISCRETE_STEPS  7
+// 8 [36] 64 92 120
+#define RAMP_DISCRETE_FLOOR  RAMP_SMOOTH_FLOOR
+#define RAMP_DISCRETE_CEIL   RAMP_SMOOTH_CEIL
+#define RAMP_DISCRETE_STEPS  5
 
-// 10 35 [60] 85 110
-#define SIMPLE_UI_FLOOR      10
-#define SIMPLE_UI_CEIL       110      // about ~12W
+// 8 [36] 64 92 120
+#define SIMPLE_UI_FLOOR      RAMP_SMOOTH_FLOOR
+#define SIMPLE_UI_CEIL       RAMP_SMOOTH_CEIL
 #define SIMPLE_UI_STEPS      5
+
+#define DEFAULT_MANUAL_MEMORY 36
+#define DEFAULT_MANUAL_MEMORY_TIMER 5
 
 // don't blink mid-ramp
 #ifdef BLINK_AT_RAMP_MIDDLE
@@ -90,7 +94,7 @@
 //**          USER INTERFACE           **
 //***************************************
 
-#define BLINK_BRIGHTNESS 30
+#define BLINK_BRIGHTNESS 36
 #define BLINK_ONCE_TIME 15
 
 //***************************************
@@ -109,7 +113,7 @@
 #define USE_CONFIG_COLORS
 
 // blink numbers on the main LEDs by default (but allow user to change it)
-#define DEFAULT_BLINK_CHANNEL  CM_MAIN
+#define DEFAULT_BLINK_CHANNEL  CM_AUXWHT
 
 // this light only has one main led channel
 // use aux red + aux blue for police strobe
@@ -117,7 +121,6 @@
 #define POLICE_STROBE_USES_AUX
 #define POLICE_COLOR_STROBE_CH1        CM_AUXRED
 #define POLICE_COLOR_STROBE_CH2        CM_AUXBLU
-
 
 // Misc
 
