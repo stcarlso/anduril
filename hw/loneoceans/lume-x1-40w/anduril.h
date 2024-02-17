@@ -48,20 +48,25 @@
 #define HALFSPEED_LEVEL 52
 #define QUARTERSPEED_LEVEL 47   // double check with TK about the mechanics of this
 
-#define DEFAULT_LEVEL 52        // ~0.5W
-#define MAX_1x7135 63           // ~1.05W
+#define DEFAULT_LEVEL 36    // About ~0.5W, ~75 lumens
+#define MAX_1x7135 70       // About ~1.65W, ~240/340 lumens M2/P4 
 // MIN_THERM_STEPDOWN defined as MAX_1x7135 in ramp-mode.h if not otherwise defined
 
-#define RAMP_SMOOTH_FLOOR 8     // ~0.04 lumens M2?
-#define RAMP_SMOOTH_CEIL 125    // ~18-20W
+#define RAMP_SMOOTH_FLOOR 8     // ~0.04 lumens M2? Math says 7 but visually looks like 9
+#define RAMP_SMOOTH_CEIL 120    // 5.75A - should be ~3500 lumens M2 or 5klm P4
 
+// 8 [36] 64 92 120
 #define RAMP_DISCRETE_FLOOR RAMP_SMOOTH_FLOOR
 #define RAMP_DISCRETE_CEIL RAMP_SMOOTH_CEIL
-#define RAMP_DISCRETE_STEPS 6
+#define RAMP_DISCRETE_STEPS 5
 
-#define SIMPLE_UI_FLOOR 16      // ~0.13 lumens M2?
-#define SIMPLE_UI_CEIL 113      // ~12W
+// 8 [36] 64 92 120
+#define SIMPLE_UI_FLOOR RAMP_SMOOTH_FLOOR      // should be 10, but visually looks ~16? ~0.13 lumens M2?
+#define SIMPLE_UI_CEIL RAMP_SMOOTH_CEIL      // Should be ~3A, ~2050 lumens M2 or 3klm P4
 #define SIMPLE_UI_STEPS 5
+
+#define DEFAULT_MANUAL_MEMORY 36
+#define DEFAULT_MANUAL_MEMORY_TIMER 5
 
 // Turn on DC/DC converter enable pin
 // For Lume1 - turn on from level 1-149 but not 150
@@ -134,7 +139,7 @@
 #define USE_CONFIG_COLORS
 
 // blink numbers on the main LEDs by default
-#define DEFAULT_BLINK_CHANNEL  CM_MAIN
+#define DEFAULT_BLINK_CHANNEL  CM_AUXWHT
 
 // this light only has one main led channel
 // use aux red + aux blue for police strobe
@@ -148,14 +153,9 @@
 #undef USE_INDICATOR_LED_WHILE_RAMPING
 #endif
 
-// RGB aux LEDs should use rainbow cycling mode
-// to impress new customers
-// (people usually change it to voltage mode later though)
-#ifdef RGB_LED_OFF_DEFAULT
-#undef RGB_LED_OFF_DEFAULT
-#endif
-#define RGB_LED_OFF_DEFAULT 0x18        // low, rainbow
-#define RGB_LED_LOCKOUT_DEFAULT 0x37    // blinking, rainbow
+// Aux LEDs: Low Batt Check (Standby) / Low Red (Locked out)
+#define RGB_LED_OFF_DEFAULT 0x19
+#define RGB_LED_LOCKOUT_DEFAULT 0x10
 
 // enable blinking aux LEDs
 #define TICK_DURING_STANDBY
@@ -168,7 +168,7 @@
 #define USE_SOS_MODE_IN_BLINKY_GROUP
 
 // enable Beacontower blinky mode 
-#define USE_BEACONTOWER_MODE
+//#define USE_BEACONTOWER_MODE
 
 // party strobe on-time
 #define PARTY_STROBE_ONTIME 4
