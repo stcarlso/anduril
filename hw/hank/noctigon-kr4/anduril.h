@@ -14,6 +14,10 @@
 // FET: ~3700 lm
 #define RAMP_SIZE 150
 
+// off mode: high (2)
+// lockout: low (1)
+#define INDICATOR_LED_DEFAULT_MODE ((1<<2) + 2)
+
 // nice low lows, but might have visible ripple on some lights:
 // maxreg at 130, dynamic PWM: level_calc.py 5.01 2 149 7135 1 0.3 1740 FET 1 10 3190 --pwm dyn:64:16384:255
 // (plus one extra level at the beginning for moon)
@@ -30,21 +34,23 @@
 //#define PWM_TOPS 4095,4095,3760,3403,3020,2611,2176,3582,3062,2515,1940,3221,2761,2283,2998,2584,3004,2631,2899,2555,2735,2836,2538,2606,2636,2638,2387,2382,2361,2328,2286,2238,2185,2129,2070,2010,1949,1887,1826,1766,1706,1648,1591,1536,1482,1429,1379,1329,1242,1199,1122,1084,1016,953,895,842,791,723,659,602,549,482,422,367,302,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255
 
 #define MAX_1x7135 130
-#define DEFAULT_LEVEL 50
+#define DEFAULT_LEVEL 53
 #define HALFSPEED_LEVEL 12
 #define QUARTERSPEED_LEVEL 4
 
-#define RAMP_SMOOTH_FLOOR 11  // low levels may be unreliable
+#define RAMP_SMOOTH_FLOOR 1  // low levels may be unreliable
 #define RAMP_SMOOTH_CEIL  130
-// 11 30 [50] 70 90 110 [130]
-#define RAMP_DISCRETE_FLOOR 11
+// 1 27 [53] 79 105 130
+#define RAMP_DISCRETE_FLOOR RAMP_SMOOTH_FLOOR
 #define RAMP_DISCRETE_CEIL  RAMP_SMOOTH_CEIL
-#define RAMP_DISCRETE_STEPS 7
+#define RAMP_DISCRETE_STEPS 5
 
-// safe limit ~30% power / ~1300 lm (can sustain 900 lm)
-#define SIMPLE_UI_FLOOR RAMP_DISCRETE_FLOOR
-#define SIMPLE_UI_CEIL 120
+#define SIMPLE_UI_FLOOR RAMP_SMOOTH_FLOOR
+#define SIMPLE_UI_CEIL RAMP_SMOOTH_CEIL
 #define SIMPLE_UI_STEPS 5
+
+#define DEFAULT_MANUAL_MEMORY 53
+#define DEFAULT_MANUAL_MEMORY_TIMER 5
 
 // stop panicking at ~1300 lm
 #define THERM_FASTER_LEVEL 120
@@ -62,17 +68,11 @@
 
 // there is usually no lighted button, so
 // blink numbers on the main LEDs by default (but allow user to change it)
-#define DEFAULT_BLINK_CHANNEL  CM_MAIN
+#define DEFAULT_BLINK_CHANNEL  CM_AUXWHT
 
 // slow down party strobe; this driver can't pulse for 1ms or less
 // (only needed on no-FET build)
 //#define PARTY_STROBE_ONTIME 2
-
-// use aux red + aux blue for police strobe
-#define USE_POLICE_COLOR_STROBE_MODE
-#define POLICE_STROBE_USES_AUX
-#define POLICE_COLOR_STROBE_CH1        CM_AUXRED
-#define POLICE_COLOR_STROBE_CH2        CM_AUXBLU
 
 // the default of 26 looks a bit rough, so increase it to make it smoother
 #define CANDLE_AMPLITUDE 33
@@ -84,4 +84,3 @@
 
 // can't reset the normal way because power is connected before the button
 #define USE_SOFT_FACTORY_RESET
-
