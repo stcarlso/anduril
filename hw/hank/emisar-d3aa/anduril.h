@@ -15,6 +15,10 @@
 
 #define RAMP_SIZE 150
 
+// off mode: low (1)
+// lockout: low (1)
+#define INDICATOR_LED_DEFAULT_MODE ((1<<1) + 1)
+
 // 4 ramp segments:
 //   - low  1.024V
 //   - low  2.5  V
@@ -38,7 +42,7 @@
 #define MAX_1x7135            40
 #define HDR_ENABLE_LEVEL_MIN  41
 
-#define DEFAULT_LEVEL         50
+#define DEFAULT_LEVEL         30
 
 // no PWM, so MCU clock speed can be slow
 #define HALFSPEED_LEVEL      41
@@ -48,17 +52,20 @@
 // to avoid overloading firmware flashing adapters
 #define WEAK_BATTERY_TEST_MAX_LEVEL       75
 
-#define RAMP_SMOOTH_FLOOR    1
+#define RAMP_SMOOTH_FLOOR    5
 #define RAMP_SMOOTH_CEIL     130  // 50% power
-// 10 30 [50] 70 90 110 130
-#define RAMP_DISCRETE_FLOOR  10
+// 5 [30] 55 80 105 130
+#define RAMP_DISCRETE_FLOOR  5
 #define RAMP_DISCRETE_CEIL   130
-#define RAMP_DISCRETE_STEPS  7
+#define RAMP_DISCRETE_STEPS  5
 
-// 10 [40] 70 100 130
-#define SIMPLE_UI_FLOOR      10
-#define SIMPLE_UI_CEIL       130
-#define SIMPLE_UI_STEPS      5
+// 5 [30] 55 80 105 130
+#define SIMPLE_UI_FLOOR      RAMP_DISCRETE_FLOOR
+#define SIMPLE_UI_CEIL       RAMP_DISCRETE_CEIL
+#define SIMPLE_UI_STEPS      RAMP_DISCRETE_STEPS
+
+#define DEFAULT_MANUAL_MEMORY 30
+#define DEFAULT_MANUAL_MEMORY_TIMER 5
 
 // don't blink mid-ramp
 #ifdef BLINK_AT_RAMP_MIDDLE
@@ -91,7 +98,7 @@
 #define USE_CONFIG_COLORS
 
 // blink numbers on the main LEDs by default (but allow user to change it)
-#define DEFAULT_BLINK_CHANNEL  CM_MAIN
+#define DEFAULT_BLINK_CHANNEL  CM_AUXWHT
 
 // use aux red + aux blue for police strobe
 #define USE_POLICE_COLOR_STROBE_MODE
@@ -117,3 +124,9 @@
 // added for convenience
 #define USE_SOFT_FACTORY_RESET
 
+// Aux LEDs: Low Cyan (Standby) / Low Red (Locked out)
+#define RGB_LED_OFF_DEFAULT 0x13
+#define RGB_LED_LOCKOUT_DEFAULT 0x10
+
+// No post-off voltage display by default
+#define DEFAULT_POST_OFF_VOLTAGE_SECONDS 0
