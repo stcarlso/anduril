@@ -352,7 +352,7 @@ static void ADC_temperature_handler() {
             
             // if TURBO_TEMP_EXTRA is defined, allow to run hotter in turbo until limit is hit
             #ifdef TURBO_TEMP_EXTRA
-            if ((temperature < (TH_CEIL + TURBO_TEMP_EXTRA)) && (actual_level >= RAMP_SIZE-1) ){
+            if ((temperature < (TH_CEIL + TURBO_TEMP_EXTRA)) && (actual_level >= RAMP_SIZE) ){
                 ; // take no action
             } 
             else{
