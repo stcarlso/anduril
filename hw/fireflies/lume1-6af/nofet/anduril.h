@@ -1,5 +1,5 @@
 // FireflyLite (Fireflies) config options for Anduril
-// Copyright (C) 2018-2023 Selene ToyKeeper, Loneoceans
+// Copyright (C) 2018-2024 Selene ToyKeeper, Loneoceans
 // SPDX-License-Identifier: GPL-3.0-or-later
 #pragma once
 
@@ -16,6 +16,7 @@
 
 // no fet-mode for turbo
 #undef TURBO_TEMP_EXTRA
+#define TURBO_TEMP_EXTRA 0
 
 // reconfigure ramp tables
 #undef PWM1_LEVELS
