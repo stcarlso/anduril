@@ -1,5 +1,5 @@
 // FireflyLite (Fireflies) config options for Anduril
-// Copyright (C) 2018-2023 Selene ToyKeeper, Loneoceans
+// Copyright (C) 2018-2024 Selene ToyKeeper, Loneoceans
 // SPDX-License-Identifier: GPL-3.0-or-later
 #pragma once
 
@@ -13,7 +13,7 @@
 #define DEFAULT_THERM_CEIL 50
 
 #undef RAMP_SMOOTH_CEIL
-#define RAMP_SMOOTH_CEIL 138    // ~70% ~3000 lumens vs Turbo at ~4000 lumens M4
+#define RAMP_SMOOTH_CEIL 130    // ~62.5% ~2500 lumens vs Turbo at ~4000 lumens M4
 
 #undef SIMPLE_UI_CEIL
 #define SIMPLE_UI_CEIL 120      // ~2000 lumens
