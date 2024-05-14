@@ -58,20 +58,24 @@
 #define HALFSPEED_LEVEL     20
 #define QUARTERSPEED_LEVEL  10
 
-#define DEFAULT_LEVEL  70
+#define DEFAULT_LEVEL  41
 #define MAX_1x7135     50
 
-#define RAMP_SMOOTH_FLOOR    1
-#define RAMP_SMOOTH_CEIL     130
+#define RAMP_SMOOTH_FLOOR    5
+#define RAMP_SMOOTH_CEIL     149
 
-#define RAMP_DISCRETE_FLOOR  10
-#define RAMP_DISCRETE_CEIL   130
-#define RAMP_DISCRETE_STEPS  7
+// 5 [41] 77 113 149
+#define RAMP_DISCRETE_FLOOR  RAMP_SMOOTH_FLOOR
+#define RAMP_DISCRETE_CEIL   RAMP_SMOOTH_CEIL
+#define RAMP_DISCRETE_STEPS  5
 
-// 10 40 [70] 100 130
-#define SIMPLE_UI_FLOOR      10
-#define SIMPLE_UI_CEIL       130
+// 5 [41] 77 113 149
+#define SIMPLE_UI_FLOOR      RAMP_SMOOTH_FLOOR
+#define SIMPLE_UI_CEIL       RAMP_SMOOTH_CEIL
 #define SIMPLE_UI_STEPS      5
+
+#define DEFAULT_MANUAL_MEMORY 41
+#define DEFAULT_MANUAL_MEMORY_TIMER 5
 
 // don't blink mid-ramp
 #undef BLINK_AT_RAMP_MIDDLE
@@ -98,7 +102,7 @@
 //**          USER INTERFACE           **
 //***************************************
 
-#define BLINK_BRIGHTNESS 30
+#define BLINK_BRIGHTNESS 41
 #define BLINK_ONCE_TIME 15
 
 //***************************************
@@ -116,8 +120,8 @@
 // show each channel while it scroll by in the menu
 #define USE_CONFIG_COLORS
 
-// blink numbers on the main LEDs by default (but allow user to change it)
-#define DEFAULT_BLINK_CHANNEL  CM_MAIN
+// blink numbers on the aux LEDs by default (but allow user to change it)
+#define DEFAULT_BLINK_CHANNEL  CM_AUXWHT
 
 // this light only has one main led channel
 // use aux red + aux blue for police strobe
