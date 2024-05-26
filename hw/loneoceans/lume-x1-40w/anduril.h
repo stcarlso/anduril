@@ -68,6 +68,9 @@
 #define DEFAULT_MANUAL_MEMORY 36
 #define DEFAULT_MANUAL_MEMORY_TIMER 5
 
+// No post-off voltage display by default
+#define DEFAULT_POST_OFF_VOLTAGE_SECONDS 0
+
 // Turn on DC/DC converter enable pin
 // For Lume1 - turn on from level 1-149 but not 150
 // For Lume X1 - turn on from all levels 1-150
