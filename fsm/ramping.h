@@ -160,6 +160,23 @@ PROGMEM const PWM_DATATYPE pwm_tops[] = { PWM_TOPS };
     #endif
 #endif
 
+#ifdef USE_ULTRA_LOW_MODE
+    #ifndef DEFAULT_ULTRA_LOW_MODE
+        #define DEFAULT_ULTRA_LOW_MODE 0
+    #endif
+
+    typedef enum {
+        level_1_default = 0,
+        #ifdef USE_AUX_RGB_LEDS
+        level_1_redaux,
+        #endif
+        level_1_s0,
+        level_1_s2
+    } level_1_mode_e;
+
+    void check_s2_standby(void);
+#endif
+
 // RAMP_SIZE / MAX_LVL
 // cfg-*.h should define RAMP_SIZE
 //#define RAMP_SIZE (sizeof(stacked_pwm1_levels)/sizeof(STACKED_PWM_DATATYPE))

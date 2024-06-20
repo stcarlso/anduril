@@ -123,6 +123,10 @@ typedef struct Config {
         uint8_t jump_start_level;
     #endif
 
+    #ifdef USE_ULTRA_LOW_MODE
+        uint8_t ultra_low_mode;
+    #endif
+
 } Config;
 
 // auto-detect how many eeprom bytes

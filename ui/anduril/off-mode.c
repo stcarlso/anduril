@@ -129,6 +129,9 @@ uint8_t off_state(Event event, uint16_t arg) {
     // hold, release quickly: go to lowest level (floor)
     else if (event == EV_click1_hold_release) {
         set_state(steady_state, 1);
+        #ifdef USE_ULTRA_LOW_MODE
+        check_s2_standby();
+        #endif
         return EVENT_HANDLED;
     }
 

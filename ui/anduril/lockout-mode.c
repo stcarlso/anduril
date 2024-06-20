@@ -109,6 +109,9 @@ uint8_t lockout_state(Event event, uint16_t arg) {
         current_event = 0;
         // ... and back to ramp mode
         set_state(steady_state, 1);
+        #ifdef USE_ULTRA_LOW_MODE
+        check_s2_standby();
+        #endif
         return EVENT_HANDLED;
     }
 
