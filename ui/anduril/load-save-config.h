@@ -148,7 +148,7 @@ Config cfg = {
             .aux_low_ramp_level = USE_AUX_LEDS_WHILE_ON_INITIAL_MINIMUM_LEVEL,
         #else
             .aux_low_ramp_level = 0,  // default
-        #endif
+    #endif
         #if (USE_AUXRGB_LEDS_WHILE_ON + 0)
             // if USE_AUXRGB_LEDS_WHILE_ON is an int, passes. If blank (undefined
             // or defined with no value), evaluates to `(+0)` which evaluates to
@@ -206,6 +206,10 @@ Config cfg = {
 
     #ifdef USE_JUMP_START
         .jump_start_level = DEFAULT_JUMP_START_LEVEL,
+    #endif
+
+    #ifdef USE_ULTRA_LOW_MODE
+        .ultra_low_mode = DEFAULT_ULTRA_LOW_MODE,
     #endif
 
 };
