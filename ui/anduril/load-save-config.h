@@ -194,5 +194,9 @@ Config cfg = {
         #endif
     #endif
 
+    #ifdef USE_ULTRA_LOW_MODE
+        .ultra_low_mode = DEFAULT_ULTRA_LOW_MODE,
+    #endif
+
 };
 
