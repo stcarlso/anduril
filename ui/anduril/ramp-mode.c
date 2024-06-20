@@ -265,6 +265,9 @@ uint8_t steady_state(Event event, uint16_t arg) {
         #ifdef START_AT_MEMORIZED_LEVEL
         save_config_wl();
         #endif
+        #ifdef USE_ULTRA_LOW_MODE
+        check_s2_standby();
+        #endif
         return EVENT_HANDLED;
     }
 
@@ -425,6 +428,9 @@ uint8_t steady_state(Event event, uint16_t arg) {
         #ifdef USE_SUNSET_TIMER
         reset_sunset_timer();
         #endif
+        #ifdef USE_ULTRA_LOW_MODE
+        check_s2_standby();
+        #endif
         return EVENT_HANDLED;
     }
 
@@ -470,6 +476,9 @@ uint8_t steady_state(Event event, uint16_t arg) {
                 return EVENT_NOT_HANDLED;
         #endif
         set_level_and_therm_target(memorized_level);
+        #ifdef USE_ULTRA_LOW_MODE
+        check_s2_standby();
+        #endif
         return EVENT_HANDLED;
     }
 
@@ -637,6 +646,9 @@ void globals_config_save(uint8_t step, uint8_t value) {
     #endif
     #ifdef USE_JUMP_START
     else if (step == jump_start_config_step) { cfg.jump_start_level = value; }
+    #endif
+    #ifdef USE_ULTRA_LOW_MODE
+    else if (step == ultra_low_mode_step) { cfg.ultra_low_mode = value; }
     #endif
 }
 
