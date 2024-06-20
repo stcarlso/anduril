@@ -49,6 +49,9 @@ uint8_t channel_mode_state(Event event, uint16_t arg) {
         // remember after battery changes
         cfg.channel_mode = channel_mode;
         save_config();
+        #ifdef USE_ULTRA_LOW_MODE
+        check_s2_standby();
+        #endif
         return EVENT_HANDLED;
     }
     #endif  // if NUM_CHANNEL_MODES > 1

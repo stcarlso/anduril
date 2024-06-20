@@ -9,6 +9,10 @@
 // set this to nonzero to enter standby mode next time the system is idle
 volatile uint8_t go_to_standby = 0;
 
+#ifdef USE_ULTRA_LOW_MODE
+volatile uint8_t ul_standby_mode = 0;
+#endif
+
 #ifdef TICK_DURING_STANDBY
 #ifndef STANDBY_TICK_SPEED
 #define STANDBY_TICK_SPEED 3  // every 0.128 s

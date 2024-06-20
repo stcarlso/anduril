@@ -74,6 +74,11 @@ int main() {
             set_level(0);
             standby_mode();
         }
+        #ifdef USE_ULTRA_LOW_MODE
+        if (ul_standby_mode) {
+            standby_mode();
+        }
+        #endif
 
         // catch up on interrupts
         handle_deferred_interrupts();
