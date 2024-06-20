@@ -216,6 +216,9 @@ typedef enum {
     #ifdef USE_JUMP_START
     jump_start_config_step,
     #endif
+    #ifdef USE_ULTRA_LOW_MODE
+    ultra_low_mode_step,
+    #endif
     globals_config_num_steps
 } globals_config_steps_e;
 

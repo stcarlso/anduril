@@ -72,6 +72,10 @@ void set_level(uint8_t level) {
     //         when doing a click with a loose tailcap)
     if ((! actual_level)
             && level
+            // jump start messes with ultra low mode
+    #ifdef USE_ULTRA_LOW_MODE
+            && (cfg.ultra_low_mode == level_1_default || level > 1)
+    #endif
             && (level < JUMP_START_LEVEL)) {
         set_level(JUMP_START_LEVEL);
         delay_4ms(JUMP_START_TIME/4);
@@ -84,6 +88,13 @@ void set_level(uint8_t level) {
 
     #ifdef USE_AUX_RGB_LEDS_WHILE_ON
     set_level_aux_rgb_leds(level);
+    #endif
+
+    #if defined(USE_ULTRA_LOW_MODE) && defined(USE_AUX_RGB_LEDS)
+    if (cfg.ultra_low_mode == level_1_redaux && actual_level == 1) {
+        // turn off red aux if previously in moon on red
+        rgb_led_set(0);
+    }
     #endif
 
     if (0 == level) {
@@ -258,6 +269,14 @@ void gradual_tick() {
     }
 }
 #endif  // ifdef USE_SET_LEVEL_GRADUALLY
+
+
+#ifdef USE_ULTRA_LOW_MODE
+void check_s2_standby(void) {
+    if (actual_level == 1 && cfg.ultra_low_mode == level_1_s2)
+        ul_standby_mode = 1;
+}
+#endif
 
 
 #endif  // ifdef USE_RAMPING

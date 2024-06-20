@@ -34,9 +34,16 @@ void sleep_until_eswitch_pressed()
     irq_adc = 0;
     irq_wdt = 0;
     irq_pcint = 0;
+    #ifdef USE_ULTRA_LOW_MODE
+    while (go_to_standby || ul_standby_mode) {
+    #else
     while (go_to_standby) {
+    #endif
     #else
         go_to_standby = 0;
+        #ifdef USE_ULTRA_LOW_MODE
+        ul_standby_mode = 0;
+        #endif
     #endif
 
         // configure sleep mode
@@ -47,10 +54,10 @@ void sleep_until_eswitch_pressed()
         #endif
         set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 
-        sleep_enable();
         #ifdef BODCR  // only do this on MCUs which support it
         sleep_bod_disable();
         #endif
+        sleep_enable();
         sleep_cpu();  // wait here
 
         // something happened; wake up
@@ -60,6 +67,9 @@ void sleep_until_eswitch_pressed()
         // determine what woke us up...
         if (irq_pcint) {  // button pressed; wake up
             go_to_standby = 0;
+            #ifdef USE_ULTRA_LOW_MODE
+            ul_standby_mode = 0;
+            #endif
         }
         if (irq_adc) {  // ADC done measuring
             #ifndef USE_LOWPASS_WHILE_ASLEEP
@@ -93,7 +103,15 @@ void sleep_until_eswitch_pressed()
 void idle_mode()
 {
     // configure sleep mode
-    set_sleep_mode(SLEEP_MODE_IDLE);
+    if (0) { }
+#ifdef USE_ULTRA_LOW_MODE
+    else if (cfg.ultra_low_mode == level_1_s0 && actual_level == 1) {
+        adc_sleep_mode();
+    }
+#endif
+    else {
+        set_sleep_mode(SLEEP_MODE_IDLE);
+    }
 
     sleep_enable();
     sleep_cpu();  // wait here
