@@ -84,3 +84,6 @@
 
 // can't reset the normal way because power is connected before the button
 #define USE_SOFT_FACTORY_RESET
+
+// add config menu for ultra low modes instead of level 1
+#define USE_ULTRA_LOW_MODE
