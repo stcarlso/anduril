@@ -29,6 +29,18 @@ void set_level_zero() {
 
 // single set of LEDs with 2 stacked power channels, linear + DD FET
 void set_level_main(uint8_t level) {
+#ifdef USE_ULTRA_LOW_MODE
+    level_1_mode_e mode = cfg.ultra_low_mode;
+
+#ifdef USE_AUX_RGB_LEDS
+    if (level == 0 && mode == level_1_redaux) {
+        set_level_auxred(1);
+        set_level_zero();
+        return;
+    }
+#endif
+#endif
+
     CH1_ENABLE_PORT |= (1 << CH1_ENABLE_PIN);  // enable opamp
 
     PWM_DATATYPE ch1_pwm = PWM_GET(pwm1_levels, level);
@@ -36,8 +48,17 @@ void set_level_main(uint8_t level) {
     // pulse frequency modulation, a.k.a. dynamic PWM
     uint16_t top = PWM_GET16(pwm_tops, level);
 
-    CH1_PWM = ch1_pwm;
-    CH2_PWM = ch2_pwm;
+    if (0) { }
+#ifdef USE_ULTRA_LOW_MODE
+    else if (level == 0 && mode >= level_1_s0) {
+        CH1_PWM = 0;
+        CH2_PWM = 0;
+    }
+#endif
+    else {
+        CH1_PWM = ch1_pwm;
+        CH2_PWM = ch2_pwm;
+    }
     // wait to sync the counter and avoid flashes
     while(actual_level && (PWM_CNT > (top - 32))) {}
     PWM_TOP = top;
@@ -52,6 +73,13 @@ bool gradual_tick_main(uint8_t gt) {
 
     GRADUAL_ADJUST_STACKED(pwm1, CH1_PWM, PWM_TOP_INIT);
     GRADUAL_ADJUST_SIMPLE (pwm2, CH2_PWM);
+
+#ifdef USE_ULTRA_LOW_MODE
+    if (gt == 0 && cfg.ultra_low_mode >= level_1_s0) {
+        pwm1 = 0U;
+        pwm2 = 0U;
+    }
+#endif
 
     if (   (pwm1 == CH1_PWM)
         && (pwm2 == CH2_PWM)

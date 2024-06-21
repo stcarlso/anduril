@@ -56,22 +56,37 @@ Channel channels[] = {
 };
 
 
+void set_level_zero() {
+    CH1_PWM = 0;
+    CH2_PWM = 0;
+    PWM_TOP = PWM_TOP_INIT;
+    PWM_CNT = 0;
+    CH1_ENABLE_PORT &= ~(1 << CH1_ENABLE_PIN);  // disable opamp
+    CH2_ENABLE_PORT &= ~(1 << CH2_ENABLE_PIN);  // disable opamp
+}
+
 // set new values for both channels,
 // handling any possible combination
 // and any before/after state
-void set_pwms(uint16_t ch1_pwm, uint16_t ch2_pwm, uint16_t top) {
+void set_pwms(uint16_t level, uint16_t ch1_pwm, uint16_t ch2_pwm, uint16_t top) {
     bool was_on = (CH1_PWM>0) | (CH2_PWM>0);
     bool now_on = (ch1_pwm>0) | (ch2_pwm>0);
+#ifdef USE_ULTRA_LOW_MODE
+    level_1_mode_e mode = cfg.ultra_low_mode;
+#endif
 
     if (! now_on) {
-        CH1_PWM = 0;
-        CH2_PWM = 0;
-        PWM_TOP = PWM_TOP_INIT;
-        PWM_CNT = 0;
-        CH1_ENABLE_PORT &= ~(1 << CH1_ENABLE_PIN);  // disable opamp
-        CH2_ENABLE_PORT &= ~(1 << CH2_ENABLE_PIN);  // disable opamp
+        set_level_zero();
         return;
     }
+
+#if defined(USE_ULTRA_LOW_MODE) && defined(USE_AUX_RGB_LEDS)
+    if (level == 0 && mode == level_1_redaux) {
+        set_level_auxred(1);
+        set_level_zero();
+        return;
+    }
+#endif
 
     if (ch1_pwm)
         CH1_ENABLE_PORT |= (1 << CH1_ENABLE_PIN);  // enable opamp
@@ -83,11 +98,20 @@ void set_pwms(uint16_t ch1_pwm, uint16_t ch2_pwm, uint16_t top) {
     else
         CH2_ENABLE_PORT &= ~(1 << CH2_ENABLE_PIN);  // disable opamp
 
-    CH1_PWM = ch1_pwm;
-    CH2_PWM = ch2_pwm;
+    if (0) { }
+#ifdef USE_ULTRA_LOW_MODE
+    else if (level == 0 && mode >= level_1_s0) {
+        CH1_PWM = 0;
+        CH2_PWM = 0;
+    }
+#endif
+    else {
+        CH1_PWM = ch1_pwm;
+        CH2_PWM = ch2_pwm;
+    }
 
     // manual phase sync when changing level while already on
-    if (was_on && now_on) while(PWM_CNT > (top - 32)) {}
+    if (was_on) while(PWM_CNT > (top - 32)) {}
 
     PWM_TOP = top;
 
@@ -96,26 +120,25 @@ void set_pwms(uint16_t ch1_pwm, uint16_t ch2_pwm, uint16_t top) {
     if (! was_on) PWM_CNT = 0;
 }
 
-void set_level_zero() {
-    return set_pwms(0, 0, PWM_TOP_INIT);
-}
-
 void set_level_ch1(uint8_t level) {
     uint16_t pwm = PWM_GET(pwm1_levels, level);
     uint16_t top = PWM_GET(pwm_tops, level);
-    set_pwms(pwm, 0, top);
+
+    set_pwms(level, pwm, 0, top);
 }
 
 void set_level_ch2(uint8_t level) {
     uint16_t pwm = PWM_GET(pwm1_levels, level);
     uint16_t top = PWM_GET(pwm_tops, level);
-    set_pwms(0, pwm, top);
+
+    set_pwms(level, 0, pwm, top);
 }
 
 void set_level_both(uint8_t level) {
     uint16_t pwm = PWM_GET(pwm1_levels, level);
     uint16_t top = PWM_GET(pwm_tops, level);
-    set_pwms(pwm, pwm, top);
+
+    set_pwms(level, pwm, pwm, top);
 }
 
 void set_level_blend(uint8_t level) {
@@ -125,8 +148,7 @@ void set_level_blend(uint8_t level) {
     uint8_t blend           = cfg.channel_mode_args[channel_mode];
 
     calc_2ch_blend(&ch1_pwm, &ch2_pwm, brightness, top, blend);
-
-    set_pwms(ch1_pwm, ch2_pwm, top);
+    set_pwms(level, ch1_pwm, ch2_pwm, top);
 }
 
 void set_level_auto(uint8_t level) {
@@ -139,7 +161,7 @@ void set_level_auto(uint8_t level) {
 
     calc_2ch_blend(&ch1_pwm, &ch2_pwm, brightness, top, blend);
 
-    set_pwms(ch1_pwm, ch2_pwm, top);
+    set_pwms(level, ch1_pwm, ch2_pwm, top);
 }
 
 
@@ -156,18 +178,27 @@ bool gradual_adjust(uint16_t ch1_pwm, uint16_t ch2_pwm) {
     return false;  // not done yet
 }
 
-bool gradual_tick_ch1(uint8_t gt) {
+static uint16_t get_pwm(uint8_t gt) {
     uint16_t pwm = PWM_GET(pwm1_levels, gt);
+#ifdef USE_ULTRA_LOW_MODE
+    if (gt == 0 && cfg.ultra_low_mode >= level_1_s0)
+        pwm = 0U;
+#endif
+    return pwm;
+}
+
+bool gradual_tick_ch1(uint8_t gt) {
+    uint16_t pwm = get_pwm(gt);
     return gradual_adjust(pwm, 0);
 }
 
 bool gradual_tick_ch2(uint8_t gt) {
-    uint16_t pwm = PWM_GET(pwm1_levels, gt);
+    uint16_t pwm = get_pwm(gt);
     return gradual_adjust(0, pwm);
 }
 
 bool gradual_tick_both(uint8_t gt) {
-    uint16_t pwm = PWM_GET(pwm1_levels, gt);
+    uint16_t pwm = get_pwm(gt);
     return gradual_adjust(pwm, pwm);
 }
 
@@ -179,6 +210,12 @@ bool gradual_tick_blend(uint8_t gt) {
 
     calc_2ch_blend(&ch1_pwm, &ch2_pwm, brightness, top, blend);
 
+#ifdef USE_ULTRA_LOW_MODE
+    if (gt == 0 && cfg.ultra_low_mode >= level_1_s0) {
+        ch1_pwm = 0U;
+        ch2_pwm = 0U;
+    }
+#endif
     return gradual_adjust(ch1_pwm, ch2_pwm);
 }
 
@@ -192,6 +229,12 @@ bool gradual_tick_auto(uint8_t gt) {
 
     calc_2ch_blend(&ch1_pwm, &ch2_pwm, brightness, top, blend);
 
+#ifdef USE_ULTRA_LOW_MODE
+    if (gt == 0 && cfg.ultra_low_mode >= level_1_s0) {
+        ch1_pwm = 0U;
+        ch2_pwm = 0U;
+    }
+#endif
     return gradual_adjust(ch1_pwm, ch2_pwm);
 }
 

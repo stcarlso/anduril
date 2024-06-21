@@ -56,23 +56,38 @@ Channel channels[] = {
 };
 
 
+void set_level_zero() {
+    CH1_PWM = 0;  // linear
+    CH2_PWM = 0;  // linear
+    CH3_PWM = 0;  // DD FET
+    PWM_TOP = PWM_TOP_INIT;
+    PWM_CNT = 0;
+    CH1_ENABLE_PORT &= ~(1 << CH1_ENABLE_PIN);  // disable opamp
+    CH2_ENABLE_PORT &= ~(1 << CH2_ENABLE_PIN);  // disable opamp
+}
+
 // set new values for both channels,
 // handling any possible combination
 // and any before/after state
-void set_pwms(uint8_t ch1_pwm, uint8_t ch2_pwm, uint8_t ch3_pwm, uint16_t top) {
+void set_pwms(uint16_t level, uint8_t ch1_pwm, uint8_t ch2_pwm, uint8_t ch3_pwm, uint16_t top) {
     bool was_on = (CH1_PWM>0) | (CH2_PWM>0) | (CH3_PWM>0);
     bool now_on = (ch1_pwm>0) | (ch2_pwm>0) | (ch3_pwm>0);
+#ifdef USE_ULTRA_LOW_MODE
+    level_1_mode_e mode = cfg.ultra_low_mode;
+#endif
 
     if (! now_on) {
-        CH1_PWM = 0;  // linear
-        CH2_PWM = 0;  // linear
-        CH3_PWM = 0;  // DD FET
-        PWM_TOP = PWM_TOP_INIT;
-        PWM_CNT = 0;
-        CH1_ENABLE_PORT &= ~(1 << CH1_ENABLE_PIN);  // disable opamp
-        CH2_ENABLE_PORT &= ~(1 << CH2_ENABLE_PIN);  // disable opamp
+        set_level_zero();
         return;
     }
+
+#if defined(USE_ULTRA_LOW_MODE) && defined(USE_AUX_RGB_LEDS)
+    if (level == 0 && mode == level_1_redaux) {
+        set_level_auxred(1);
+        set_level_zero();
+        return;
+    }
+#endif
 
     if (ch1_pwm)
         CH1_ENABLE_PORT |= (1 << CH1_ENABLE_PIN);  // enable opamp
@@ -84,9 +99,19 @@ void set_pwms(uint8_t ch1_pwm, uint8_t ch2_pwm, uint8_t ch3_pwm, uint16_t top) {
     else
         CH2_ENABLE_PORT &= ~(1 << CH2_ENABLE_PIN);  // disable opamp
 
-    CH1_PWM = ch1_pwm;
-    CH2_PWM = ch2_pwm;
-    CH3_PWM = ch3_pwm;
+    if (0) { }
+#ifdef USE_ULTRA_LOW_MODE
+    else if (level == 0 && mode >= level_1_s0) {
+        CH1_PWM = 0;
+        CH2_PWM = 0;
+        CH3_PWM = 0;
+    }
+#endif
+    else {
+        CH1_PWM = ch1_pwm;
+        CH2_PWM = ch2_pwm;
+        CH3_PWM = ch3_pwm;
+    }
 
     // manual phase sync when changing level while already on
     if (was_on && now_on) while(PWM_CNT > (top - 32)) {}
@@ -98,28 +123,27 @@ void set_pwms(uint8_t ch1_pwm, uint8_t ch2_pwm, uint8_t ch3_pwm, uint16_t top) {
     if (! was_on) PWM_CNT = 0;
 }
 
-void set_level_zero() {
-    return set_pwms(0, 0, 0, PWM_TOP_INIT);
-}
-
 void set_level_ch1(uint8_t level) {
     uint8_t  pwm1 = PWM_GET8 (pwm1_levels, level);
     uint8_t  pwm3 = PWM_GET8 (pwm2_levels, level);
     uint16_t top  = PWM_GET16(pwm3_levels, level);
-    set_pwms(pwm1, 0, pwm3, top);
+
+    set_pwms(level, pwm1, 0, pwm3, top);
 }
 
 void set_level_ch2(uint8_t level) {
     uint8_t  pwm2 = PWM_GET8 (pwm4_levels, level);
     uint16_t top  = PWM_GET16(pwm5_levels, level);
-    set_pwms(0, pwm2, 0, top);
+
+    set_pwms(level, 0, pwm2, 0, top);
 }
 
 void set_level_both(uint8_t level) {
     uint8_t  pwm1 = PWM_GET8 (pwm1_levels, level);
     uint8_t  pwm3 = PWM_GET8 (pwm2_levels, level);
     uint16_t top  = PWM_GET16(pwm3_levels, level);
-    set_pwms(pwm1, pwm1, pwm3, top);
+
+    set_pwms(level, pwm1, pwm1, pwm3, top);
 }
 
 void set_level_blend(uint8_t level) {
@@ -132,7 +156,7 @@ void set_level_blend(uint8_t level) {
 
     calc_2ch_blend(&pwm1, &pwm2, brightness, top, blend);
 
-    set_pwms(pwm1, pwm2, pwm3, top);
+    set_pwms(level, pwm1, pwm2, pwm3, top);
 }
 
 void set_level_auto(uint8_t level) {
@@ -145,7 +169,7 @@ void set_level_auto(uint8_t level) {
 
     calc_2ch_blend(&pwm1, &pwm2, brightness, top, blend);
 
-    set_pwms(pwm1, pwm2, 0, top);
+    set_pwms(level, pwm1, pwm2, 0, top);
 }
 
 
@@ -164,20 +188,28 @@ bool gradual_adjust(uint8_t ch1_pwm, uint8_t ch2_pwm, uint8_t ch3_pwm) {
     return false;  // not done yet
 }
 
+static uint8_t adjust_pwm(uint8_t gt, uint8_t pwm_in) {
+#ifdef USE_ULTRA_LOW_MODE
+    if (gt == 0 && cfg.ultra_low_mode >= level_1_s0)
+        pwm_in = 0U;
+#endif
+    return pwm_in;
+}
+
 bool gradual_tick_ch1(uint8_t gt) {
-    uint8_t pwm1 = PWM_GET8(pwm1_levels, gt);
-    uint8_t pwm3 = PWM_GET8(pwm2_levels, gt);
+    uint8_t pwm1 = adjust_pwm(PWM_GET8(pwm1_levels, gt), gt);
+    uint8_t pwm3 = adjust_pwm(PWM_GET8(pwm2_levels, gt), gt);
     return gradual_adjust(pwm1, 0, pwm3);
 }
 
 bool gradual_tick_ch2(uint8_t gt) {
-    uint8_t pwm2 = PWM_GET8(pwm4_levels, gt);
+    uint8_t pwm2 = adjust_pwm(PWM_GET8(pwm4_levels, gt), gt);
     return gradual_adjust(0, pwm2, 0);
 }
 
 bool gradual_tick_both(uint8_t gt) {
-    uint8_t pwm1 = PWM_GET8(pwm1_levels, gt);
-    uint8_t pwm3 = PWM_GET8(pwm2_levels, gt);
+    uint8_t pwm1 = adjust_pwm(PWM_GET8(pwm1_levels, gt), gt);
+    uint8_t pwm3 = adjust_pwm(PWM_GET8(pwm2_levels, gt), gt);
     return gradual_adjust(pwm1, pwm1, pwm3);
 }
 
@@ -185,7 +217,7 @@ bool gradual_tick_blend(uint8_t level) {
     uint16_t pwm1, pwm2;
     uint8_t  pwm3       = PWM_GET8 (pwm2_levels, level);  // DD FET
     //uint16_t brightness = PWM_GET8 (pwm1_levels, level) << 1;
-    uint16_t brightness = PWM_GET8 (pwm1_levels, level) + pwm3;
+    uint16_t brightness = adjust_pwm(PWM_GET8 (pwm1_levels, level) + pwm3, level);
     uint16_t top        = PWM_GET16(pwm3_levels, level);
     uint8_t  blend      = cfg.channel_mode_args[channel_mode];
 
@@ -196,7 +228,7 @@ bool gradual_tick_blend(uint8_t level) {
 
 bool gradual_tick_auto(uint8_t level) {
     uint16_t pwm1, pwm2;
-    uint8_t  brightness = PWM_GET8 (pwm4_levels, level);
+    uint8_t  brightness = adjust_pwm(PWM_GET8 (pwm4_levels, level), level);
     uint16_t top        = PWM_GET16(pwm5_levels, level);
     uint8_t  blend      = 255 * (uint16_t)level / RAMP_SIZE;
     if (cfg.channel_mode_args[channel_mode] & 0b01000000)

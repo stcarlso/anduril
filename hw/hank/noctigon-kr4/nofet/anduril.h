@@ -63,3 +63,6 @@
 #undef MIN_THERM_STEPDOWN
 #define MIN_THERM_STEPDOWN 80  // must be > end of dynamic PWM range
 
+// add config menu for ultra low modes instead of level 1
+#define USE_ULTRA_LOW_MODE
+
