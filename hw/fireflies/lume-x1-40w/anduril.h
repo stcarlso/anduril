@@ -13,7 +13,7 @@
 #define DEFAULT_THERM_CEIL 50
 
 #undef RAMP_SMOOTH_CEIL
-#define RAMP_SMOOTH_CEIL 130    // ~62.5% ~2500 lumens vs Turbo at ~4000 lumens M4
+#define RAMP_SMOOTH_CEIL 125    // ~18-20W (3.0A)
 
 #undef SIMPLE_UI_CEIL
-#define SIMPLE_UI_CEIL 120      // ~2000 lumens
+#define SIMPLE_UI_CEIL 113      // ~12W (2.0A)
