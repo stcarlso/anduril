@@ -13,24 +13,15 @@
 //**    RAMP TABLE AND OPERATIONS      **
 //***************************************
 
-#define RAMP_SIZE 156
+#define RAMP_SIZE 150   // Change to 160 as well as table and values below if desired
 
 // PWM1: DAC Data
 // UDR x^4 curves specifically for Lume-X1 (AVR32DD20)
 
-#define PWM1_LEVELS 1, 2, 8, 25, 25, 127, 236, 402, 644, 402, 588, 833, \
-        11, 15, 20, 26, 33, 17, 21, 26, 77, 38, 111, 131, 155, 74, 210, \
-        243, 280, 320, 365, 415, 469, 529, 594, 272, 741, 825, 915, \
-        1013, 458, 504, 554, 607, 664, 726, 791, 860, 934, 1013, \
-        24, 26, 28, 12, 13, 34, 15, 39, 17, 44, 47, 50, \
-        22, 57, 61, 64, 28, 72, 77, 81, 86, 37, 96, 101, 106, 112, \
-        118, 51, 131, 137, 59, 62, 159, 167, 175, 75, 192, 201, 210, \
-        220, 230, 240, 251, 262, 112, 285, 297, 310, 323, 336, 350, \
-        364, 379, 394, 410, 426, 442, 459, 477, 495, 514, 533, 552, \
-        573, 243, 615, 637, 270, 683, 706, 731, 756, 782, 331, 835, \
-        863, 892, 921, 951, 402, 415, 428, 442, 456, 470, 484, 499, \
-        515, 530, 546, 563, 579, 596, 614, 632, 650, 669, 688, 708, \
-        728, 748, 769, 790, 812, 834, 857
+// 150 levels:
+#define PWM1_LEVELS 1, 2, 10, 31, 77, 159, 295, 504, 807, 504, 737, 1023, 14, 19, 25, 32, 41, 52, 65, 79, 96, 116, 139, 164, 194, 226, 263, 305, 351, 401, 458, 520, 588, 662, 744, 832, 929, 423, 470, 520, 574, 632, 694, 761, 832, 909, 991, 28, 30, 33, 35, 38, 41, 44, 47, 51, 54, 58, 62, 66, 71, 75, 80, 85, 90, 96, 101, 107, 113, 120, 127, 134, 141, 148, 156, 164, 173, 182, 191, 200, 210, 220, 230, 241, 252, 264, 276, 288, 300, 313, 327, 341, 355, 370, 385, 400, 416, 433, 449, 467, 485, 503, 522, 541, 561, 581, 602, 623, 645, 667, 690, 714, 738, 762, 788, 813, 840, 867, 894, 923, 951, 981, 1011, 427, 439, 453, 466, 480, 493, 508, 522, 537, 552, 567, 583, 599, 615, 632, 648, 666, 683, 701, 719, 737, 756, 775, 794, 814, 834, 856
+// 160 levels:
+// #define PWM1_LEVELS 1, 2, 8, 24, 59, 123, 228, 389, 623, 950, 569, 807, 11, 15, 19, 25, 32, 40, 50, 61, 74, 90, 107, 127, 150, 175, 203, 235, 271, 310, 354, 401, 454, 512, 575, 643, 718, 798, 886, 980, 443, 488, 536, 588, 643, 702, 765, 832, 904, 980, 28, 30, 32, 35, 37, 40, 43, 46, 49, 52, 56, 59, 63, 67, 71, 76, 80, 85, 90, 95, 100, 106, 111, 117, 123, 130, 137, 144, 151, 158, 166, 174, 182, 191, 199, 208, 218, 227, 237, 248, 258, 269, 281, 292, 304, 316, 329, 342, 355, 369, 383, 398, 413, 428, 444, 460, 476, 493, 510, 528, 546, 565, 584, 603, 623, 644, 665, 686, 708, 730, 753, 777, 800, 825, 850, 875, 901, 927, 954, 982, 1010, 425, 437, 450, 462, 475, 487, 501, 514, 528, 541, 556, 570, 585, 599, 615, 630, 646, 662, 678, 694, 711, 728, 745, 763, 780, 799, 817, 836, 856
 
 // PWM2_LEVELS - used to set the internal voltage reference for the DAC
 //  Makes use the of concept of dynamic Vref for higher resolution output
@@ -47,43 +38,33 @@
 //       set PWM2_LEVELS to be 1xxx011 (0d67) for 2.500V DAC vref (V25)
 // Other references are not so important since we have a 10-bit DAC
 
-#define PWM2_LEVELS V10, V10, V10, V10, V25, V10, V10, V10, V10, V25, \
-        V25, V25, V10, V10, V10, V10, V10, V25, V25, V25, V10, V25, \
-        V10, V10, V10, V25, V10, V10, V10, V10, V10, V10, V10, V10, \
-        V10, V25, V10, V10, V10, V10, V25, V25, V25, V25, V25, V25, \
-        V25, V25, V25, V25, V10, V10, V10, V25, \
-        V25, V10, V25, V10, V25, V10, V10, V10, V25, V10, V10, V10, \
-        V25, V10, V10, V10, V10, V25, V10, V10, V10, V10, V10, V25, \
-        V10, V10, V25, V25, V10, V10, V10, V25, V10, V10, V10, V10, \
-        V10, V10, V10, V10, V25, V10, V10, V10, V10, V10, V10, V10, \
-        V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, \
-        V25, V10, V10, V25, V10, V10, V10, V10, V10, V25, V10, V10, \
-        V10, V10, V10, V25, V25, V25, V25, V25, V25, V25, V25, V25, \
-        V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, \
-        V25, V25, V25, V25, V25, V25
+// 150 levels:
+#define PWM2_LEVELS V10, V10, V10, V10, V10, V10, V10, V10, V10, V25, V25, V25, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25
+// 160 levels:
+// #define PWM2_LEVELS V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V25, V25, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V10, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25
 
 // Enable usage of multiple power paths 
 //#define USE_MULTIPLE_POWER_PATH (no longer required, defined in hwdef.c for >2023 Anduril)
 #define LED_PATH1_PIN_LEVEL_MIN 1
 #define LED_PATH2_PIN_LEVEL_MIN 13
-#define LED_PATH3_PIN_LEVEL_MIN 51
+#define LED_PATH3_PIN_LEVEL_MIN 48 // 51 for 160 levels
 
 #define HALFSPEED_LEVEL 50
 #define QUARTERSPEED_LEVEL 40   // check with TK about the mechanics of this
 
-#define DEFAULT_LEVEL 61        // about same as 1 AMC7135 
-#define MAX_1x7135 61           // about same as 1 AMC7135 
+#define DEFAULT_LEVEL 59        // about same as 1 AMC7135, (61 for 160 levels)
+#define MAX_1x7135 59           // about same as 1 AMC7135 
 // MIN_THERM_STEPDOWN defined as MAX_1x7135 in ramp-mode.h if not otherwise defined
 
-#define RAMP_SMOOTH_FLOOR 10    // about 50uA, almost 1000x brighter than lowest
-#define RAMP_SMOOTH_CEIL 131    // about ~18-20W (Turbo ~40W)
+#define RAMP_SMOOTH_FLOOR 10    // similar to SC700d moon?
+#define RAMP_SMOOTH_CEIL 124    // about ~18-20W (Turbo ~40W), (132 for 160 levels)
 
 #define RAMP_DISCRETE_FLOOR RAMP_SMOOTH_FLOOR
 #define RAMP_DISCRETE_CEIL RAMP_SMOOTH_CEIL
 #define RAMP_DISCRETE_STEPS 6
 
-#define SIMPLE_UI_FLOOR 15      // about ~0.24mA
-#define SIMPLE_UI_CEIL 119      // about ~12W
+#define SIMPLE_UI_FLOOR 17      // about ~0.1 lm?
+#define SIMPLE_UI_CEIL 112      // about ~12W, (119 for 160 levels)
 #define SIMPLE_UI_STEPS 5
 
 // don't blink mid-ramp
