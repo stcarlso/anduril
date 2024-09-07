@@ -1,5 +1,5 @@
 // Copyright (C) 2017-2023 Selene ToyKeeper
-//               2021-2023 loneoceans
+//               2021-2024 loneoceans
 // SPDX-License-Identifier: GPL-3.0-or-later
 #pragma once
 
@@ -17,7 +17,7 @@
 
 // PWM1: DAC Data
 // UDR x^4 curves specifically for Lume X1
-#define PWM1_LEVELS 1, 2, 7, 18, 37, 25, 117, 187, 143, 92, 217, 179, 241, 11, 15, 4, 23, 29, 13, 43, 52, 62, 27, 19, 101, 118, 50, 157, 66, 205, 233, 58, 148, 122, 82, 208, 231, 113, 125, 230, 253, 167, 183, 200, 219, 238, 255, 11, 12, 13, 14, 15, 17, 19, 21, 23, 25, 27, 29, 31, 12, 35, 37, 39, 42, 44, 47, 11, 53, 56, 13, 14, 15, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 28, 29, 30, 32, 33, 35, 36, 38, 39, 41, 43, 45, 47, 48, 50, 52, 55, 57, 59, 61, 64, 66, 68, 71, 74, 76, 79, 82, 85, 88, 91, 94, 97, 101, 104, 107, 111, 115, 118, 122, 126, 130, 134, 138, 143, 147, 152, 156, 161, 166, 171, 176, 181, 186, 192, 197, 203, 208, 214, 220, 226, 233, 239, 245, 255
+#define PWM1_LEVELS 1, 2, 4, 8, 18, 37, 69, 117, 188, 143, 210, 218, 180, 242, 11, 15, 19, 23, 29, 36, 43, 52, 62, 74, 87, 102, 118, 137, 157, 180, 205, 233, 132, 148, 167, 187, 208, 232, 188, 209, 230, 253, 167, 183, 200, 219, 239, 255, 13, 14, 15, 16, 17, 19, 20, 22, 23, 25, 27, 29, 31, 33, 35, 37, 39, 42, 45, 47, 50, 53, 56, 60, 63, 66, 70, 74, 78, 82, 87, 91, 96, 101, 106, 111, 116, 122, 128, 134, 140, 146, 153, 160, 167, 175, 182, 190, 198, 207, 215, 224, 233, 243, 253, 131, 137, 142, 147, 153, 159, 165, 171, 177, 184, 190, 197, 204, 212, 219, 227, 234, 243, 251, 190, 196, 203, 210, 216, 223, 231, 238, 245, 253, 157, 161, 166, 171, 177, 182, 187, 193, 198, 204, 210, 216, 222, 229, 235, 242, 248, 255
 
 // PWM2_LEVELS - used to set the internal voltage reference for the DAC
 //  Makes use the of concept of dynamic Vref for higher resolution output
@@ -36,31 +36,31 @@
 //       set PWM2_LEVELS to be 10100 (0d20) for 1.5V DAC vref (V15)
 //       set PWM2_LEVELS to be 10010 (0d18) for 2.5V DAC vref (V25)
 // VREF selector (0.55V=16,1.1V=17, 2.5V=18, 4.3V=19, 1.5V=20)
-#define PWM2_LEVELS V05, V05, V05, V05, V05, V15, V05, V05, V11, V25, V15, V25, V25, V05, V05, V25, V05, V05, V15, V05, V05, V05, V15, V25, V05, V05, V15, V05, V15, V05, V05, V25, V11, V15, V25, V11, V11, V25, V25, V15, V15, V25, V25, V25, V25, V25, V25, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V15, V05, V05, V05, V05, V05, V05, V25, V05, V05, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25
+#define PWM2_LEVELS V05, V05, V05, V05, V05, V05, V05, V05, V05, V11, V11, V15, V25, V25, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V11, V11, V11, V11, V11, V11, V15, V15, V15, V15, V25, V25, V25, V25, V25, V25, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V05, V11, V11, V11, V11, V11, V11, V11, V11, V11, V11, V11, V11, V11, V11, V11, V11, V11, V11, V11, V15, V15, V15, V15, V15, V15, V15, V15, V15, V15, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25, V25
 
 // Enable usage of multiple power paths 
-//#define USE_MULTIPLE_POWER_PATH (no longer reqired, defined in hwdef.c for 2023 Anduril 2)
+//#define USE_MULTIPLE_POWER_PATH (no longer required, defined in hwdef.c for >2023 Anduril2)
 #define LED_PATH1_PIN_LEVEL_MIN 1
-#define LED_PATH2_PIN_LEVEL_MIN 14
-#define LED_PATH3_PIN_LEVEL_MIN 48
+#define LED_PATH2_PIN_LEVEL_MIN 15
+#define LED_PATH3_PIN_LEVEL_MIN 49
 #define LED_FET_PIN_LEVEL_MIN 150   // Not used for Lume X1
 
 #define HALFSPEED_LEVEL 52
-#define QUARTERSPEED_LEVEL 47   // doublecheck with TK about the mechanics of this
+#define QUARTERSPEED_LEVEL 47   // double check with TK about the mechanics of this
 
-#define DEFAULT_LEVEL 52    // About ~0.5W, ~75 lumens
-#define MAX_1x7135 70       // About ~1.65W, ~240/340 lumens M2/P4 
+#define DEFAULT_LEVEL 52        // ~0.5W
+#define MAX_1x7135 63           // ~1.05W
 // MIN_THERM_STEPDOWN defined as MAX_1x7135 in ramp-mode.h if not otherwise defined
 
-#define RAMP_SMOOTH_FLOOR 8     // ~0.04 lumens M2? Math says 7 but visually looks like 9
-#define RAMP_SMOOTH_CEIL 150    // 5.75A - should be ~3500 lumens M2 or 5klm P4
+#define RAMP_SMOOTH_FLOOR 8     // ~0.04 lumens M2?
+#define RAMP_SMOOTH_CEIL 125    // ~18-20W
 
 #define RAMP_DISCRETE_FLOOR RAMP_SMOOTH_FLOOR
 #define RAMP_DISCRETE_CEIL RAMP_SMOOTH_CEIL
 #define RAMP_DISCRETE_STEPS 6
 
-#define SIMPLE_UI_FLOOR 16      // should be 10, but visually looks ~16? ~0.13 lumens M2?
-#define SIMPLE_UI_CEIL 125      // Should be ~3A, ~2050 lumens M2 or 3klm P4
+#define SIMPLE_UI_FLOOR 16      // ~0.13 lumens M2?
+#define SIMPLE_UI_CEIL 113      // ~12W
 #define SIMPLE_UI_STEPS 5
 
 // Turn on DC/DC converter enable pin
@@ -85,8 +85,8 @@
 #define DEFAULT_THERM_CEIL 50
 
 // stop panicking at ~1.5A (not sure of this numbers yet since it depends on the host..)
-#define THERM_FASTER_LEVEL 106          // About ~1.5A/8-9W
-#define MIN_THERM_STEPDOWN 70           // About 310mA / 1.7W
+#define THERM_FASTER_LEVEL 106          // ~8.8W
+#define MIN_THERM_STEPDOWN 63           // ~1.05W
 #define THERM_NEXT_WARNING_THRESHOLD 16 // 24 by default -> increase for fewer adjustments (more stable output on large time scale)
 #define THERM_RESPONSE_MAGNITUDE 32     // 64 by default -> decrease for smaller adjustments (removes dip post turbo)
 //#define THERM_WINDOW_SIZE 1           // 2 by default -> decrease for tighter temperature regulation
@@ -185,6 +185,9 @@
 
 // enable long-blink as negative sign
 #define USE_LONG_BLINK_FOR_NEGATIVE_SIGN
+
+// enable OTG mode in momentary mode
+#define USE_OTG_IN_MOMENTARY
 
 // Uncomment to use Microphone mode
 //#define USE_MICROPHONE_MODE

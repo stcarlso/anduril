@@ -1,5 +1,5 @@
 // Copyright (C) 2017-2023 Selene ToyKeeper
-//               2021-2023 loneoceans
+//               2021-2024 loneoceans
 // SPDX-License-Identifier: GPL-3.0-or-later
 #pragma once
 
@@ -7,7 +7,7 @@
 //**  HARDWARE DEFINITIONS FOR LUME-X1-40W   **
 //*********************************************
 
-/*  Loneoceans Lume-X1-40W with ATTINY1616
+/*  Loneoceans Lume-X1-40W with ATTINY1616 (REV A1-A3)
 
     40W Boost Driver with UDR (Ultra Dynamic Range), RGB & Switch Aux LEDs
 
@@ -16,7 +16,6 @@
     - PA0 / PP19 - nRST / UPDI pin
 
     - PA3 / PP2  - EXTCLK (not used)
-    - PA4 / PP5  - NOT USED
     - PA5 / PP6  - VREFA (not used)
     - PC2 / PP17 - NOT USED
 
@@ -38,6 +37,7 @@
 
     - PA2 / PP1 / AIN2 - MIC Analog Input
     - PA1 / PP20 - MIC Enable / Supply pin
+    - PA4 / PP5  - OTG pin
 */
 
 #define HWDEF_C  loneoceans/lume-x1-40w/hwdef.c
@@ -145,6 +145,10 @@ enum CHANNEL_MODES {
 #define VOLTAGE_FUDGE_FACTOR 1  // PFET for RRP, essentially 0 v-drop, but experimentally add 0.05V for better UX
 #endif
 
+// define power-bank enable pin
+#define POWER_BANK_EN_PIN  PIN4_bm
+#define POWER_BANK_EN_PORT PORTA_OUT
+
 //***************************************
 //**          HARDWARE INIT            **
 //***************************************
@@ -157,9 +161,14 @@ inline void hwdef_setup() {
 
     // set pins as 1 for output pins
 
-    VPORTA.DIR = PIN6_bm | PIN7_bm;
+    VPORTA.DIR = PIN4_bm | PIN6_bm | PIN7_bm;
     VPORTB.DIR = PIN0_bm | PIN1_bm | PIN3_bm | PIN4_bm | PIN5_bm;
     VPORTC.DIR = PIN0_bm;
+
+    // set OTG pin to low during startup
+    #ifdef USE_OTG_IN_MOMENTARY
+    POWER_BANK_EN_PORT &= ~POWER_BANK_EN_PIN; 
+    #endif
 
     PORTC.DIRCLR = PIN1_bm; // set Aux LED Switch Pin as input for now
 
@@ -169,7 +178,7 @@ inline void hwdef_setup() {
     PORTA.PIN1CTRL = PORT_PULLUPEN_bm;     // MIC Enable
     PORTA.PIN2CTRL = PORT_PULLUPEN_bm;     // MIC input
     PORTA.PIN3CTRL = PORT_PULLUPEN_bm;
-    PORTA.PIN4CTRL = PORT_PULLUPEN_bm;
+    //PORTA.PIN4CTRL = PORT_PULLUPEN_bm;
     PORTA.PIN5CTRL = PORT_PULLUPEN_bm;
     //PORTA.PIN6CTRL = PORT_PULLUPEN_bm;  // DAC ouput
     //PORTA.PIN7CTRL = PORT_PULLUPEN_bm;  // PATH1
