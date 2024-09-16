@@ -153,7 +153,11 @@ uint16_t temp_raw2cooked(uint16_t measurement);
 #define ADMUX_THERM_EXTERNAL_SENSOR 0b00001011
 
 // this driver allows for aux LEDs under the optic
-#ifdef FW3X_RGB_SWAP  // wiring fixed by end user
+#if defined(FW3X_RG_SWAP)  // weird wiring with R/G swapped but B fine
+    #define AUXLED_R_PIN    PA4    // pin 3
+    #define AUXLED_G_PIN    PA3    // pin 4
+    #define AUXLED_B_PIN    PA5    // pin 2
+#elif defined(FW3X_RGB_SWAP)  // wiring fixed by end user
     #define AUXLED_R_PIN    PA5    // pin 2
     #define AUXLED_G_PIN    PA4    // pin 3
     #define AUXLED_B_PIN    PA3    // pin 4

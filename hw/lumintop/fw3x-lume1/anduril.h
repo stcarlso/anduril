@@ -19,6 +19,8 @@
 // this light has three aux LED channels: R, G, B
 #define USE_AUX_RGB_LEDS
 
+#define FW3X_RG_SWAP
+
 // the aux LEDs are front-facing, so turn them off while main LEDs are on
 #ifdef USE_INDICATOR_LED_WHILE_RAMPING
 #undef USE_INDICATOR_LED_WHILE_RAMPING
@@ -31,39 +33,39 @@
 #define PWM1_LEVELS  0,1,2,3,4,5,6,7,9,10,12,14,17,19,22,25,29,33,37,41,46,51,57,63,70,77,85,93,103,112,123,134,146,159,172,187,203,219,237,256,276,297,319,343,368,394,422,452,483,516,551,587,625,666,708,753,799,848,900,954,1010,1069,1131,1195,1263,1333,1407,1483,1563,1647,1734,1825,1919,2017,2119,2226,2336,2451,2571,2694,2823,2957,3095,3239,3388,3542,3702,3868,4040,4217,4401,4591,4788,4992,5202,5419,5644,5876,6115,6362,6617,6880,7152,7432,7721,8018,8325,8641,8967,9302,9647,10003,10369,10745,11133,11531,11941,12363,12796,13241,13699,14169,14652,15148,15657,16180,16717,17268,17834,18414,19009,19620,20246,20888,21546,22221,22913,23621,24348,25091,25853,26634,27433,28251,29089,29946,30823,31721,32640,0
 // DD FET: 8-bit PWM (but hardware can only handle 0 and MAX)
 #define PWM2_LEVELS  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255
-#define DEFAULT_LEVEL 56
+
+#define DEFAULT_LEVEL 41
 #define MAX_1x7135 149
 #define MIN_THERM_STEPDOWN 50
 #define HALFSPEED_LEVEL 11
 #define QUARTERSPEED_LEVEL 2
 
-#define RAMP_SMOOTH_FLOOR 4
+#define RAMP_SMOOTH_FLOOR 5
 #define RAMP_SMOOTH_CEIL 149
-// 10 33 56 79 102 125 [149]
-#define RAMP_DISCRETE_FLOOR 16
-#define RAMP_DISCRETE_CEIL  RAMP_SMOOTH_CEIL
-#define RAMP_DISCRETE_STEPS 6
+
+// 5 [41] 77 113 149
+#define RAMP_DISCRETE_FLOOR RAMP_SMOOTH_FLOOR
+#define RAMP_DISCRETE_CEIL RAMP_SMOOTH_CEIL
+#define RAMP_DISCRETE_STEPS 5
 
 #define SIMPLE_UI_FLOOR RAMP_DISCRETE_FLOOR
-#define SIMPLE_UI_CEIL 120
+#define SIMPLE_UI_CEIL RAMP_DISCRETE_CEIL
 #define SIMPLE_UI_STEPS 5
+
+#define DEFAULT_MANUAL_MEMORY 41
+#define DEFAULT_MANUAL_MEMORY_TIMER 5
 
 // set this light to use stepped ramp by default (instead of smooth)
 #undef RAMP_STYLE
 #define RAMP_STYLE 1
-
-// disable smooth steps by default
-#ifdef USE_SMOOTH_STEPS
-#undef USE_SMOOTH_STEPS
-#endif
 
 //#define BCK_ON_DELAY 4
 
 // show each channel while it scroll by in the menu
 #define USE_CONFIG_COLORS
 
-// blink numbers on the main LEDs by default (but allow user to change it)
-#define DEFAULT_BLINK_CHANNEL  CM_MAIN
+// blink numbers on the aux LEDs by default (but allow user to change it)
+#define DEFAULT_BLINK_CHANNEL  CM_AUXGRN
 
 // slow down party strobe; this driver can't pulse for too short a time
 #define PARTY_STROBE_ONTIME 3
@@ -91,14 +93,26 @@
 #ifdef RGB_LED_OFF_DEFAULT
 #undef RGB_LED_OFF_DEFAULT
 #endif
-#define RGB_LED_OFF_DEFAULT 0x37  // blinking, rainbow
+// low, cyan
+#define RGB_LED_OFF_DEFAULT 0x13
+// low, red
+#define RGB_LED_LOCKOUT_DEFAULT 0x10
+
+// reduce LVP slightly for LFP
+#ifndef VOLTAGE_LOW
+#define VOLTAGE_LOW (28*dV)
+#endif
+
+#ifndef VOLTAGE_RED
+#define VOLTAGE_RED (30*dV)
+#endif
+
+// No post-off voltage display by default
+#define DEFAULT_POST_OFF_VOLTAGE_SECONDS 0
 
 // a little extra boost for turbo
 #define TURBO_TEMP_EXTRA 5
 
 // enable long-blink as negative sign
 #define USE_LONG_BLINK_FOR_NEGATIVE_SIGN
-
-// enable Beacontower blinky mode 
-#define USE_BEACONTOWER_MODE
 
