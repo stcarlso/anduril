@@ -21,20 +21,21 @@
 #define PWM2_LEVELS  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255
 
 #define MAX_1x7135           149
-#define DEFAULT_LEVEL        56
+#define DEFAULT_LEVEL        41
 #define MIN_THERM_STEPDOWN   50
 #define HALFSPEED_LEVEL      11
 #define QUARTERSPEED_LEVEL   2
 
-#define RAMP_SMOOTH_FLOOR    1
+#define RAMP_SMOOTH_FLOOR    5
 #define RAMP_SMOOTH_CEIL     149
-// 10 33 56 79 102 125 [149]
-#define RAMP_DISCRETE_FLOOR  10
+// 5 [41] 77 113 149
+#define RAMP_DISCRETE_FLOOR  RAMP_SMOOTH_FLOOR
 #define RAMP_DISCRETE_CEIL   RAMP_SMOOTH_CEIL
-#define RAMP_DISCRETE_STEPS  7
+#define RAMP_DISCRETE_STEPS  5
 
+// 5 [41] 77 113 149
 #define SIMPLE_UI_FLOOR      RAMP_DISCRETE_FLOOR
-#define SIMPLE_UI_CEIL       120
+#define SIMPLE_UI_CEIL       RAMP_DISCRETE_CEIL
 #define SIMPLE_UI_STEPS      5
 
 // stop panicking at ~85% regulated power or ~750 lm
@@ -54,8 +55,8 @@
 // show each channel while it scroll by in the menu
 #define USE_CONFIG_COLORS
 
-// blink numbers on the main LEDs by default (but allow user to change it)
-#define DEFAULT_BLINK_CHANNEL  CM_MAIN
+// blink numbers on the aux LEDs by default (but allow user to change it)
+#define DEFAULT_BLINK_CHANNEL  CM_AUXGRN
 
 // slow down party strobe; this driver can't pulse for too short a time
 #define PARTY_STROBE_ONTIME 1
@@ -80,4 +81,28 @@
 
 // can't reset the normal way because power is connected before the button
 #define USE_SOFT_FACTORY_RESET
+
+#define FW3X_RG_SWAP
+
+// RGB aux LEDs default behavior
+#ifdef RGB_LED_OFF_DEFAULT
+#undef RGB_LED_OFF_DEFAULT
+#endif
+#define RGB_LED_OFF_DEFAULT auxrgb_cfg_byte(aux_low_e, aux_rgb_voltage_e)
+#define RGB_LED_LOCKOUT_DEFAULT auxrgb_cfg_byte(aux_low_e, aux_rgb_red_e)
+
+// reduce LVP slightly for LFP
+#ifndef VOLTAGE_LOW
+#define VOLTAGE_LOW (28*dV)
+#endif
+
+#ifndef VOLTAGE_RED
+#define VOLTAGE_RED (30*dV)
+#endif
+
+// No post-off voltage display by default
+#define DEFAULT_POST_OFF_VOLTAGE_SECONDS 0
+
+// enable long-blink as negative sign
+#define USE_LONG_BLINK_FOR_NEGATIVE_SIGN
 
