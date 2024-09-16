@@ -165,7 +165,11 @@ uint16_t temp_raw2cooked(uint16_t measurement);
 #define USE_AUXRGB_LEDS
 
 // aux RGB passive
-#ifdef FW3X_RGB_SWAP  // wiring fixed by end user
+#if defined(FW3X_RG_SWAP)  // weird wiring with R/G swapped but B fine
+    #define AUXRGB_R_PIN    PA4    // pin 3
+    #define AUXRGB_G_PIN    PA3    // pin 4
+    #define AUXRGB_B_PIN    PA5    // pin 2
+#elif defined(FW3X_RGB_SWAP)  // wiring fixed by end user
     #define AUXRGB_R_PIN    PA5    // pin 2
     #define AUXRGB_G_PIN    PA4    // pin 3
     #define AUXRGB_B_PIN    PA3    // pin 4
