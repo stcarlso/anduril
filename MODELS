@@ -92,7 +92,8 @@ Model     MCU         Name
 1632dd20  avr32dd20   thefreeman-avr32dd20-devkit
 4201      attiny1616  loneoceans-lume1-6af (6A buck + FET)
 4202      attiny1634  loneoceans-lume1-2020 (6A buck + FET, 2020 ver.)
-4211      attiny1616  loneoceans-lume-x1-40w (40W boost driver)
+4211      attiny1616  loneoceans-lume-x1-40w (40W boost)
+4212      avr32dd20   loneoceans-lume-x1-avr32dd20 (40W boost)
 
 Duplicates:
 
