@@ -56,14 +56,14 @@
 #define MAX_1x7135 59           // about same as 1 AMC7135 
 // MIN_THERM_STEPDOWN defined as MAX_1x7135 in ramp-mode.h if not otherwise defined
 
-#define RAMP_SMOOTH_FLOOR 10    // similar to SC700d moon?
+#define RAMP_SMOOTH_FLOOR 8
 #define RAMP_SMOOTH_CEIL 124    // about ~18-20W (Turbo ~40W), (132 for 160 levels)
 
 #define RAMP_DISCRETE_FLOOR RAMP_SMOOTH_FLOOR
 #define RAMP_DISCRETE_CEIL RAMP_SMOOTH_CEIL
 #define RAMP_DISCRETE_STEPS 6
 
-#define SIMPLE_UI_FLOOR 17      // about ~0.1 lm?
+#define SIMPLE_UI_FLOOR 13
 #define SIMPLE_UI_CEIL 112      // about ~12W, (119 for 160 levels)
 #define SIMPLE_UI_STEPS 5
 
