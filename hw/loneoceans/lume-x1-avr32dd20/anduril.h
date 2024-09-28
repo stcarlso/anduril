@@ -63,7 +63,7 @@
 #define RAMP_DISCRETE_CEIL RAMP_SMOOTH_CEIL
 #define RAMP_DISCRETE_STEPS 6
 
-#define SIMPLE_UI_FLOOR 13
+#define SIMPLE_UI_FLOOR 11
 #define SIMPLE_UI_CEIL 112      // about ~12W, (119 for 160 levels)
 #define SIMPLE_UI_STEPS 5
 
@@ -124,7 +124,7 @@
 //#endif
 
 #define BLINK_BRIGHTNESS (MAX_LEVEL/5)  // increase blink brightness from max/6
-#define BLINK_ONCE_TIME 32              // increase from 10 to make brighter
+//#define BLINK_ONCE_TIME 32              // increase from 10 to make brighter
 
 //***************************************
 //**       AUX LEDs and MISC           **
@@ -176,7 +176,7 @@
 #define USE_BEACONTOWER_MODE
 
 // party strobe on-time
-#define PARTY_STROBE_ONTIME 4
+#define PARTY_STROBE_ONTIME 3
 #define STROBE_OFF_LEVEL 1  // keep regulators on between strobes
 
 // smoother candle mode with bigger oscillations
