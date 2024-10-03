@@ -51,20 +51,23 @@
 inline void beacontower_mode_iter() {
     // one iteration of main loop()
     // TODO: currently does not respond to button during ramp up/downs
-    if (! button_last_state) {
-    	for (uint8_t i =0; i<memorized_level;i+=2){
-    		set_level(i);
-    		nice_delay_ms(2); 
-    	}
-    	set_level(memorized_level);
-        nice_delay_ms(beacontower_seconds*250);
-		for (uint8_t i  = memorized_level;i>0;i--){
-    		set_level(i);
-            if (i>30) {nice_delay_ms(5);}
-            else {nice_delay_ms(8);}
-    	}
+    if (!button_last_state) {
+        for (uint8_t i = 0; i<memorized_level;i+=2){
+            set_level(i);
+            if (!nice_delay_ms(2)) goto end_state;
+        }
+        set_level(memorized_level);
+        if (!nice_delay_ms(beacontower_seconds*250)) goto end_state;
+        for (uint8_t i = memorized_level;i>0;i--){
+            uint8_t result;
+            set_level(i);
+            if (i>30) { result = nice_delay_ms(5); }
+            else { result = nice_delay_ms(8); }
+            if (!result) goto end_state;
+        }
+        if (!nice_delay_ms(beacontower_seconds*480)) goto end_state;
+end_state:
         set_level(0);
-        nice_delay_ms(beacontower_seconds*480);
     }
 }
 
@@ -79,7 +82,9 @@ uint8_t beacontower_state(Event event, uint16_t arg) {
 
     // 2 clicks: next blinky mode
     else if (event == EV_2clicks) {
-    	#if defined(USE_BATTCHECK_MODE)
+        #if defined(USE_HEARTBEAT_MODE)
+        set_state(heartbeat_state, 0);
+        #elif defined(USE_BATTCHECK_MODE)
         set_state(battcheck_state, 0);
         #elif defined(USE_THERMAL_REGULATION)
         set_state(tempcheck_state, 0);

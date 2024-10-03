@@ -17,6 +17,8 @@ uint8_t sos_state(Event event, uint16_t arg) {
     else if (event == EV_2clicks) {
         #if defined(USE_BEACONTOWER_MODE)
         set_state(beacontower_state, 0);
+        #elif defined(USE_HEARTBEAT_MODE)
+        set_state(heartbeat_state, 0);
         #elif defined(USE_BATTCHECK_MODE)
         set_state(battcheck_state, 0);
         #elif defined(USE_THERMAL_REGULATION)
