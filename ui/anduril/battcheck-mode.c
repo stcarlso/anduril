@@ -66,6 +66,8 @@ uint8_t battcheck_state(Event event, uint16_t arg) {
         set_state(beacon_state, 0);
         #elif defined(USE_SOS_MODE) && defined(USE_SOS_MODE_IN_BLINKY_GROUP)
         set_state(sos_state, 0);
+        #elif defined(USE_HEARTBEAT_MODE)
+        set_state(heartbeat_state, 0);
         #endif
         return EVENT_HANDLED;
     }
