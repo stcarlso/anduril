@@ -185,6 +185,10 @@
 #include "anduril/beacontower-mode.c"
 #endif
 
+#ifdef USE_HEARTBEAT_MODE
+#include "anduril/heartbeat-mode.c"
+#endif
+
 #ifdef USE_THERMAL_REGULATION
 #include "anduril/tempcheck-mode.c"
 #endif
@@ -375,6 +379,12 @@ void loop() {
     #ifdef USE_BEACONTOWER_MODE
     else if (state == beacontower_state) {
         beacontower_mode_iter();
+    }
+    #endif
+
+    #ifdef USE_HEARTBEAT_MODE
+    else if (state == heartbeat_state) {
+        heartbeat_mode_iter();
     }
     #endif
 
