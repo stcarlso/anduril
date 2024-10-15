@@ -163,8 +163,8 @@
 #define RGB_LED_LOCKOUT_DEFAULT 0x37    // blinking, rainbow
 
 // enable blinking aux LEDs
-#define TICK_DURING_STANDBY
-#define STANDBY_TICK_SPEED 3  // every 0.128 s
+//#define TICK_DURING_STANDBY
+//#define STANDBY_TICK_SPEED 3  // every 0.128 s
 //#define STANDBY_TICK_SPEED 4  // every 0.256 s
 //#define STANDBY_TICK_SPEED 5  // every 0.512 s
 
