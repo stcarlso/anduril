@@ -77,6 +77,7 @@
 //***************************************
 
 //#define USE_THERMAL_REGULATION
+#define AVRXMEGA3   // used in factory-reset.c for thermal offset cal, probably should refactor
 
 // set thermal ceiling
 
