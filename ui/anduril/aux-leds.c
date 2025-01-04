@@ -216,7 +216,9 @@ void rgb_led_update(uint8_t mode, uint16_t arg) {
             break;
         case 1:  // low
             result = actual_color;
-            #ifdef USE_AUX1_LED
+            #ifdef AUX1_LED_ALWAYS_HIGH
+            button_led_result = 2;
+            #elif defined(USE_AUX1_LED)
             button_led_result = 1;
             #endif
             break;
