@@ -52,20 +52,28 @@
 #define HALFSPEED_LEVEL 50
 #define QUARTERSPEED_LEVEL 40   // check with TK about the mechanics of this
 
-#define DEFAULT_LEVEL 59        // about same as 1 AMC7135, (61 for 160 levels)
-#define MAX_1x7135 59           // about same as 1 AMC7135 
+#define DEFAULT_LEVEL 36    // About ~0.5W, ~75 lumens
+#define MAX_1x7135 70       // About ~1.65W, ~240/340 lumens M2/P4 
 // MIN_THERM_STEPDOWN defined as MAX_1x7135 in ramp-mode.h if not otherwise defined
 
-#define RAMP_SMOOTH_FLOOR 7
-#define RAMP_SMOOTH_CEIL 124    // about ~18-20W (Turbo ~40W), (132 for 160 levels)
+#define RAMP_SMOOTH_FLOOR 8     // ~0.04 lumens M2? Math says 7 but visually looks like 9
+#define RAMP_SMOOTH_CEIL 120    // 5.75A - should be ~3500 lumens M2 or 5klm P4
 
+// 8 [36] 64 92 120
 #define RAMP_DISCRETE_FLOOR RAMP_SMOOTH_FLOOR
 #define RAMP_DISCRETE_CEIL RAMP_SMOOTH_CEIL
-#define RAMP_DISCRETE_STEPS 6
+#define RAMP_DISCRETE_STEPS 5
 
-#define SIMPLE_UI_FLOOR 11
-#define SIMPLE_UI_CEIL 112      // about ~12W, (119 for 160 levels)
+// 8 [36] 64 92 120
+#define SIMPLE_UI_FLOOR RAMP_SMOOTH_FLOOR      // should be 10, but visually looks ~16? ~0.13 lumens M2?
+#define SIMPLE_UI_CEIL RAMP_SMOOTH_CEIL      // Should be ~3A, ~2050 lumens M2 or 3klm P4
 #define SIMPLE_UI_STEPS 5
+
+#define DEFAULT_MANUAL_MEMORY 36
+#define DEFAULT_MANUAL_MEMORY_TIMER 5
+
+// No post-off voltage display by default
+#define DEFAULT_POST_OFF_VOLTAGE_SECONDS 0
 
 // don't blink mid-ramp
 #ifdef BLINK_AT_RAMP_MIDDLE
@@ -90,8 +98,8 @@
 //#define TURBO_TEMP_EXTRA 0
 
 // stop panicking at 6W (not sure of this numbers yet since it depends on the host..)
-#define THERM_FASTER_LEVEL 98          // about 6W
-#define MIN_THERM_STEPDOWN 62           // similar to single amc7135 in a 3V light
+#define THERM_FASTER_LEVEL 106          // used value from FFL lights, but Hanks have better thermals?
+#define MIN_THERM_STEPDOWN 64           // similar to single amc7135 in a 3V light
 //#define THERM_NEXT_WARNING_THRESHOLD 24 // 24 by default -> increase for fewer adjustments (more stable output on large time scale)
 //#define THERM_RESPONSE_MAGNITUDE 64     // 64 by default -> decrease for smaller adjustments (removes dip post turbo)
 //#define THERM_WINDOW_SIZE 1           // 2 by default -> decrease for tighter temperature regulation
@@ -154,14 +162,9 @@
 #undef USE_INDICATOR_LED_WHILE_RAMPING
 #endif
 
-// RGB aux LEDs should use rainbow cycling mode
-// to impress new customers
-// (people usually change it to voltage mode later though)
-#ifdef RGB_LED_OFF_DEFAULT
-#undef RGB_LED_OFF_DEFAULT
-#endif
-#define RGB_LED_OFF_DEFAULT     0x18    // low, rainbow
-#define RGB_LED_LOCKOUT_DEFAULT 0x37    // blinking, rainbow
+// Aux LEDs: Low Batt Check (Standby) / Low Red (Locked out)
+#define RGB_LED_OFF_DEFAULT 0x19
+#define RGB_LED_LOCKOUT_DEFAULT 0x10
 
 // enable blinking aux LEDs
 //#define TICK_DURING_STANDBY
@@ -174,7 +177,7 @@
 #define USE_SOS_MODE_IN_BLINKY_GROUP
 
 // enable Beacontower blinky mode 
-#define USE_BEACONTOWER_MODE
+//#define USE_BEACONTOWER_MODE
 
 // party strobe on-time
 #define PARTY_STROBE_ONTIME 3
