@@ -37,7 +37,7 @@ inline void set_level_aux_leds(uint8_t level) {
 #endif  // ifdef HAS_AUX_LEDS
 
 #ifdef USE_AUX_RGB_LEDS_WHILE_ON
-// TODO: maybe move this stuff into FSM
+
 #include "anduril/aux-leds.h"  // for rgb_led_voltage_readout()
 inline void set_level_aux_rgb_leds(uint8_t level) {
     if ((! go_to_standby)
@@ -89,15 +89,13 @@ void set_level(uint8_t level) {
     #endif
 
     #ifdef USE_AUX_RGB_LEDS_WHILE_ON
-       #ifdef USE_CHANNEL_USES_AUX
-       if (!channel_uses_aux(channel_mode)) {
-         set_level_aux_rgb_leds(level);
-       }
-       #else
-       set_level_aux_rgb_leds(level);
-       #endif
-
-    set_level_aux_rgb_leds(level);
+        #ifdef USE_CHANNEL_USES_AUX
+        if (!channel_uses_aux(channel_mode)) {
+            set_level_aux_rgb_leds(level);
+        }
+        #else
+        set_level_aux_rgb_leds(level);
+        #endif
     #endif
 
     #if defined(USE_ULTRA_LOW_MODE) && defined(USE_AUX_RGB_LEDS)
