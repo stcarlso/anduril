@@ -67,6 +67,7 @@ Model     MCU         Name
 0451      attiny1616  fireflies-lume1-6af        (E07X, E12R, NOV-Mu, etc)
 0452      attiny1616  fireflies-lume1-6af-nofet  (T9R, T1R, etc)
 0461      attiny1616  fireflies-lume-x1-40w      (X1S, X1L, etc)
+0462      avr32dd20   fireflies-lume-x1-avr32dd20 (X4Q, X1Q, etc)
 0511      attiny85    mateminco-mf01s
 0521      attiny85    mateminco-mf01-mini
 0531      attiny85    mateminco-mt35-mini
@@ -93,6 +94,7 @@ Model     MCU         Name
 1632dd20  avr32dd20   thefreeman-avr32dd20-devkit
 4201      attiny1616  loneoceans-lume1-6af (6A buck + FET)
 4202      attiny1634  loneoceans-lume1-2020 (6A buck + FET, 2020 ver.)
+4203      avr32dd20   loneoceans-lume1-15af (15A buck + FET)
 4211      attiny1616  loneoceans-lume-x1-40w (40W boost)
 4212      avr32dd20   loneoceans-lume-x1-avr32dd20 (40W boost)
 
