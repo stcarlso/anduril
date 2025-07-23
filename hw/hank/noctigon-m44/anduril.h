@@ -50,15 +50,18 @@
 
 #define RAMP_SMOOTH_FLOOR    1
 #define RAMP_SMOOTH_CEIL     130
-// 10 30 50 [70] 90 110 130
-#define RAMP_DISCRETE_FLOOR  10
+// 1 [30] 60 90 120
+#define RAMP_DISCRETE_FLOOR  RAMP_SMOOTH_FLOOR
 #define RAMP_DISCRETE_CEIL   RAMP_SMOOTH_CEIL
-#define RAMP_DISCRETE_STEPS  7
+#define RAMP_DISCRETE_STEPS  5
 
-// 10 40 [70] 100 130
+// 1 [30] 60 90 120
 #define SIMPLE_UI_FLOOR      RAMP_DISCRETE_FLOOR
 #define SIMPLE_UI_CEIL       RAMP_DISCRETE_CEIL
 #define SIMPLE_UI_STEPS      5
+
+#define DEFAULT_MANUAL_MEMORY 30
+#define DEFAULT_MANUAL_MEMORY_TIMER 5
 
 // stop panicking at ~???? lm
 #define THERM_FASTER_LEVEL  130
@@ -74,25 +77,21 @@
 // channel modes...
 // CM_CH1, CM_CH2, CM_BOTH, CM_BLEND, CM_AUTO
 // enable max brightness out of the box
-#define DEFAULT_CHANNEL_MODE           CM_BOTH
+#define DEFAULT_CHANNEL_MODE           CM_CH2
 
-//#define FACTORY_RESET_WARN_CHANNEL     CM_CH2
-//#define FACTORY_RESET_SUCCESS_CHANNEL  CM_BOTH
+#define FACTORY_RESET_WARN_CHANNEL     CM_CH2
+#define FACTORY_RESET_SUCCESS_CHANNEL  CM_CH2
 
 #define USE_CONFIG_COLORS
-//#define CONFIG_WAITING_CHANNEL         CM_CH2
-//#define CONFIG_BLINK_CHANNEL           CM_BOTH
+#define CONFIG_WAITING_CHANNEL         CM_CH2
+#define CONFIG_BLINK_CHANNEL           CM_CH2
 
-// blink numbers on the main LEDs by default (but allow user to change it)
-#define DEFAULT_BLINK_CHANNEL  CM_BOTH
+// blink numbers on the aux LEDs by default (but allow user to change it)
+#define DEFAULT_BLINK_CHANNEL  CM_AUXCYN
 
-// use main 2 LED channels for police strobe
-#define USE_POLICE_COLOR_STROBE_MODE
-#define POLICE_COLOR_STROBE_CH1        CM_CH1
-#define POLICE_COLOR_STROBE_CH2        CM_CH2
 // aux red + aux blue are the correct colors, but are dim
-//#define POLICE_COLOR_STROBE_CH1        CM_AUXRED
-//#define POLICE_COLOR_STROBE_CH2        CM_AUXBLU
+#define POLICE_COLOR_STROBE_CH1        CM_AUXRED
+#define POLICE_COLOR_STROBE_CH2        CM_AUXBLU
 
 
 // Misc
@@ -112,7 +111,11 @@
 #define CANDLE_AMPLITUDE 33
 
 // party strobe, tac strobe, police, lightning, candle, bike
-#define DEFAULT_STROBE_CHANNELS  CM_BOTH,CM_BOTH,CM_BOTH,CM_AUTO,CM_AUTO,CM_AUTO
+//#define DEFAULT_STROBE_CHANNELS  CM_CH1,CM_BOTH,CM_BOTH,CM_BOTH,CM_CH2,CM_CH1
+
+// only enabled: tac strobe, lightning, candle
+#define USE_LIGHTNING_MODE
+#define DEFAULT_STROBE_CHANNELS  CM_BOTH,CM_BOTH,CM_CH2
 
 // the power regulator is a bit slow, so push it harder for a quick response from off
 //#define DEFAULT_JUMP_START_LEVEL 50
