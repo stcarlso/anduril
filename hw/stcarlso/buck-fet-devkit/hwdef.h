@@ -16,7 +16,7 @@
  *   7   PA3    CH2 FET enable (active LOW)
  *   8   PA4    OPAMP EN
  *   9   PA5    e-switch
- *  10   PA6    boost enable
+ *  10   PA6    buck enable
  *  11   PA7    HDR: high/low Rsense range
  *  12   PC1    R: aux red
  *  13   PC2    G: aux green
