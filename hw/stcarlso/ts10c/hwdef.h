@@ -1,5 +1,5 @@
-// hwdef for stcarlso's avr32dd20 buck+FET dev kit
-// Copyright (C) 2024 stcarlso, Selene ToyKeeper
+// hwdef for stcarlso's TS10C "FLARE 1" driver
+// Copyright (C) 2025 stcarlso, Selene ToyKeeper
 // SPDX-License-Identifier: GPL-3.0-or-later
 #pragma once
 
@@ -10,28 +10,28 @@
  *   1   GND    GND
  *   2   PF6    RESET
  *   3   PF7    UPDI
- *   4   PA0    -
+ *   4   PA0    HDR: high/low Rsense range
  *   5   PA1    -
  *   6   PA2    -
- *   7   PA3    CH2 FET enable (active LOW)
- *   8   PA4    OPAMP EN
+ *   7   PA3    -
+ *   8   PA4    -
  *   9   PA5    e-switch
- *  10   PA6    buck enable
- *  11   PA7    HDR: high/low Rsense range
+ *  10   PA6    -
+ *  11   PA7    -
  *  12   PC1    R: aux red
  *  13   PC2    G: aux green
  *  14   PC3    B: aux blue
- *  15   VDDIO2 VCC2 (unused)
- *  16   PD4    ISENSE enable
- *  17   PD5    BATT LVL (voltage divider)
+ *  15   VDDIO2 VCC2
+ *  16   PD4    -
+ *  17   PD5    buck enable
  *  18   PD6    DAC: control voltage out
- *  19   PD7    ISENSE current level
+ *  19   PD7    -
  *  20   VCC    VCC
  *
  * BATT LVL : Vbat * (100.0/(200+100))
  */
 
-#define HWDEF_C  stcarlso/buck-fet-devkit/hwdef.c
+#define HWDEF_C  stcarlso/ts10c/hwdef.c
 
 // allow using aux LEDs as extra channel modes
 #include "fsm/chan-rgbaux.h"
@@ -66,15 +66,12 @@ enum CHANNEL_MODES {
 // (DAC_LVL + DAC_VREF + Vref values are defined in arch/*.h)
 
 // BUCK enable
-#define BCK_ENABLE_PIN   PIN6_bp
-#define BCK_ENABLE_PORT  PORTA_OUT
-
-#define OPAMP_ENABLE_PIN PIN4_bp
-#define OPAMP_ENABLE_PORT PORTA_OUT
+#define BCK_ENABLE_PIN   PIN5_bp
+#define BCK_ENABLE_PORT  PORTD_OUT
 
 // HDR
 // turns on HDR FET for the high current range
-#define HDR_ENABLE_PIN   PIN7_bp
+#define HDR_ENABLE_PIN   PIN0_bp
 #define HDR_ENABLE_PORT  PORTA_OUT
 
 // e-switch
@@ -85,11 +82,6 @@ enum CHANNEL_MODES {
 #define SWITCH_VECT     PORTA_PORT_vect
 #define SWITCH_INTFLG   VPORTA.INTFLAGS
 #endif
-
-// FET channel
-#define FET_ENABLE_PIN  PIN3_bp
-#define FET_ENABLE_PORT PORTA_OUT
-
 
 // average drop across diode on this hardware
 #ifndef VOLTAGE_FUDGE_FACTOR
@@ -107,38 +99,32 @@ enum CHANNEL_MODES {
 
 
 inline void hwdef_setup() {
-    // TODO: for this DAC controlled-light, try to decrease the clock speed
-    // to reduce overall system power
     mcu_clock_speed();
 
-    // Avoid a startup flash, set FET to high
-	FET_ENABLE_PORT |= (1 << FET_ENABLE_PIN);
-
-    VPORTA.DIR = PIN3_bm   // FET
-               | PIN4_bm   // OPAMP_EN
-               | PIN6_bm   // EN
-               | PIN7_bm;  // HDR
+    VPORTA.DIR = PIN0_bm;  // HDR
     VPORTC.DIR = PIN1_bm   // R
                | PIN2_bm   // G
                | PIN3_bm;  // B
-    VPORTD.DIR = PIN4_bm;  // ISENSE_EN
+    VPORTD.DIR = PIN5_bm;  // EN
 
     // enable pullups on the unused and input pins to reduce power
-    PORTA.PIN0CTRL = PORT_PULLUPEN_bm;
     PORTA.PIN1CTRL = PORT_PULLUPEN_bm;
     PORTA.PIN2CTRL = PORT_PULLUPEN_bm;
+    PORTA.PIN3CTRL = PORT_PULLUPEN_bm;
+    PORTA.PIN4CTRL = PORT_PULLUPEN_bm;
     PORTA.PIN5CTRL = PORT_PULLUPEN_bm
                    | PORT_ISC_BOTHEDGES_gc;  // e-switch
-
+    PORTA.PIN6CTRL = PORT_PULLUPEN_bm;
+    PORTA.PIN7CTRL = PORT_PULLUPEN_bm;
+    
     // AVR datasheet 34.3.1 #2, DAC pin must have input disable set
-	PORTD.PIN5CTRL = PORT_ISC_INPUT_DISABLE_gc;  // BATT LVL
+	PORTD.PIN4CTRL = PORT_PULLUPEN_bm;
     PORTD.PIN6CTRL = PORT_ISC_INPUT_DISABLE_gc;  // DAC
-	PORTD.PIN7CTRL = PORT_ISC_INPUT_DISABLE_gc;  // ISENSE
+	PORTD.PIN7CTRL = PORT_PULLUPEN_bm;
 
     // set up the DAC
     // DAC ranges from 0V to (255 * Vref) / 256
     DAC_VREF = V10;
-    // TODO: try DAC_RUNSTDBY_bm for extra-efficient moon
     DAC_LVL = 0;  // turn off output at boot
     DAC0.CTRLA = DAC_ENABLE_bm | DAC_OUTEN_bm;
 
@@ -163,7 +149,6 @@ FUSES = {
     .OSCCFG  = FUSE_OSCCFG_DEFAULT,   // Oscillator Configuration
     .SYSCFG0 = FUSE_SYSCFG0_DEFAULT,  // System Configuration 0
 
-    // enable MVIO because VDDIO2 pin isn't connected
     // set startup time to 64ms to allow power to stabilize
     .SYSCFG1 = MVSYSCFG_DUAL_gc | SUT_64MS_gc,
 
