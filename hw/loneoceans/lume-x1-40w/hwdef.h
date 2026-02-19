@@ -142,7 +142,7 @@ enum CHANNEL_MODES {
 
 // average drop across diode on this hardware
 #ifndef VOLTAGE_FUDGE_FACTOR
-#define VOLTAGE_FUDGE_FACTOR 1  // PFET for RRP, essentially 0 v-drop, but experimentally add 0.05V for better UX
+#define VOLTAGE_FUDGE_FACTOR 0  // PFET for RRP, essentially 0 v-drop
 #endif
 
 // define power-bank enable pin

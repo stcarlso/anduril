@@ -62,12 +62,18 @@ void set_level_udrf(uint8_t level) {
         is_buck_currently_on = 0;
         // set the fet level
         PWM3_LVL = fet_lvl;
+        if (fet_lvl == 255){
+            // turn path 3 on to reduce DCR
+            LED_PATH3_PORT |= LED_PATH3_PIN; 
+        }
+        else {LED_PATH3_PORT &= ~LED_PATH3_PIN;}
     }
     else {
         // fet is not on, use the buck converter 
         PWM3_LVL = 0;   // ensure fet is off
         if(is_buck_currently_on != 1){
             // buck is not on, enable buck and add boot-up delay
+            DAC_LVL  = 0; // initialize as 0
             is_buck_currently_on = 1;
             BCK_ENABLE_PORT |= (1 << BCK_ENABLE_PIN);   // turn on buck and amplifier
             delay_4ms(BCK_ON_DELAY/4);                  // boot-up delay

@@ -190,7 +190,7 @@
 #define USE_BEACONTOWER_MODE
 
 // party strobe on-time
-#define PARTY_STROBE_ONTIME 2
+#define PARTY_STROBE_ONTIME 1
 #define STROBE_OFF_LEVEL 1  // keep regulators on between strobes
 
 // smoother candle mode with bigger oscillations
@@ -205,8 +205,7 @@
 // enable long-blink as negative sign
 #define USE_LONG_BLINK_FOR_NEGATIVE_SIGN
 
-// Uncomment to use Microphone mode
-//#define USE_MICROPHONE_MODE
-//#define MICROPHONE_SCALER 10
+// disable POVD by default since it's causing many customers a lot of issues
+#define DEFAULT_POST_OFF_VOLTAGE_SECONDS  0
 
 // ======================================

@@ -89,7 +89,7 @@ enum CHANNEL_MODES {
 // Buck and Amplifier Enable (PB3)
 #define BCK_ENABLE_PIN   PIN3_bp
 #define BCK_ENABLE_PORT  PORTB_OUT
-#define BCK_ON_DELAY 8  // ms delay turning on the led after enable
+#define BCK_ON_DELAY 4  // ms delay turning on the led after enable
 
 // Ultra Dynamic Range (UDR)
 /* 
@@ -152,7 +152,7 @@ enum CHANNEL_MODES {
 
 // average drop across diode on this hardware
 #ifndef VOLTAGE_FUDGE_FACTOR
-#define VOLTAGE_FUDGE_FACTOR 1  // PFET for RRP, essentially 0 v-drop, but experimentally add 0.05V for better UX
+#define VOLTAGE_FUDGE_FACTOR 0  // PFET for RRP, essentially 0 v-drop
 #endif
 
 //***************************************
