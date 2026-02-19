@@ -187,8 +187,7 @@
 // enable OTG mode in momentary mode
 #define USE_OTG_IN_MOMENTARY
 
-// Uncomment to use Microphone mode
-//#define USE_MICROPHONE_MODE
-//#define MICROPHONE_SCALER 10
+// disable POVD by default since it's causing many customers a lot of issues
+#define DEFAULT_POST_OFF_VOLTAGE_SECONDS  0
 
 // ======================================

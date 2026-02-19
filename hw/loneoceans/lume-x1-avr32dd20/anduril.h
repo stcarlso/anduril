@@ -124,8 +124,8 @@
 //#undef USE_SMOOTH_STEPS
 //#endif
 
-#define BLINK_BRIGHTNESS (MAX_LEVEL/5)  // increase blink brightness from max/6
-//#define BLINK_ONCE_TIME 32              // increase from 10 to make brighter
+#define BLINK_BRIGHTNESS 35  // increase from MAX_LEVEL/6 where MAX_LEVEL = RAMP_SIZE
+#define BLINK_ONCE_TIME 24   // increase from 10 to make brighter
 
 //***************************************
 //**       AUX LEDs and MISC           **
@@ -190,8 +190,7 @@
 // enable long-blink as negative sign
 #define USE_LONG_BLINK_FOR_NEGATIVE_SIGN
 
-// Uncomment to use Microphone mode
-//#define USE_MICROPHONE_MODE
-//#define MICROPHONE_SCALER 10
+// disable POVD by default since it's causing many customers a lot of issues
+#define DEFAULT_POST_OFF_VOLTAGE_SECONDS  0
 
 // ======================================
