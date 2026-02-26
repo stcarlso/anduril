@@ -91,6 +91,10 @@
 
 /********* Include all the regular app headers *********/
 
+#ifdef USE_AUXRGB_LEDS_ADV
+#include "pheripherals/aw2016/aw2016.h"
+#endif
+
 #include "anduril/off-mode.h"
 #include "anduril/ramp-mode.h"
 #include "anduril/config-mode.h"
@@ -237,9 +241,18 @@
 #include "anduril/smooth-povd.c"
 #endif
 
+#ifdef USE_AUXRGB_LEDS_ADV
+#include "pheripherals/aw2016/aw2016.c"
+#include "anduril/aux-adv.c"
+#endif
+
 
 // runs one time at boot, when power is connected
 void setup() {
+    #ifdef USE_AUXRGB_LEDS_ADV
+    // initialize Adv Aux
+    aw2016_init();
+    #endif
 
     just_booted = 1;
 
@@ -299,7 +312,6 @@ void setup() {
     #endif  // ifdef START_AT_MEMORIZED_LEVEL
 
 }
-
 
 // runs repeatedly whenever light is "on" (not in standby)
 void loop() {
@@ -411,7 +423,6 @@ void loop() {
 
 }
 
-
 // instead of handling EV_low_voltage in each mode,
 // it's handled globally here to make the code smaller and simpler
 void low_voltage() {
@@ -446,4 +457,3 @@ void low_voltage() {
     }
 
 }
-

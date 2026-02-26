@@ -6,7 +6,7 @@
 #include "anduril/aux-leds.h"
 
 
-#if defined(USE_AUX1_LED) && (!defined(USE_AUXRGB_LEDS))
+#if defined(USE_AUX1_LED) && (!defined(USE_AUXRGB_LEDS)) && (!defined(USE_AUXRGB_LEDS_ADV))
 void aux1_led_update(uint8_t mode, uint8_t tick) {
     //uint8_t volts = voltage;  // save a few bytes by caching volatile value
     // turn off when battery is too low
@@ -104,6 +104,11 @@ RGB_t voltage_to_rgb_t (rgb_uint_t brightness) {
 }
 #endif
 
+#ifdef USE_AUXRGB_LEDS_ADV
+#define ADV_AUX_SLEEP_COUNTDOWN_TIMER 32
+uint8_t adv_aux_sleep_countdown = ADV_AUX_SLEEP_COUNTDOWN_TIMER;
+#endif
+
 // do fancy stuff with the RGB aux LEDs
 // mode: 0bPPPPCCCC where PPPP is the pattern and CCCC is the color
 // arg: time slice number
@@ -161,12 +166,32 @@ void rgb_led_update(uint8_t mode, uint16_t arg) {
     uint8_t actual_color = 0;
     if (color <= aux_rgb_white_e) {  // normal color
         actual_color = pgm_read_byte(colors + color);
+        #ifdef USE_AUXRGB_LEDS_ADV
+        hsv_h = 32 * (color);
+        #endif
     }
     else if (color == aux_rgb_disco_e) {  // disco
         rainbow = (rainbow + 1 + pseudo_rand() % 5) % 6;
         actual_color = pgm_read_byte(colors + rainbow);
     }
     else if (color == aux_rgb_rainbow_e) {  // rainbow
+        #ifdef USE_AUXRGB_LEDS_ADV
+        /*
+        if entering rainbow for the first time: start rainbow
+        if to rainbow && already running rainbow: do nothing
+        if to not-rainbow && currently running rainbow: init/reset
+         */
+        to_run_adv_rainbow = 1;         // set flag to take action later
+        if (is_running_adv_rainbow){;}  // do nothing
+        else{
+            is_running_adv_rainbow = 1; // first time running rainbow
+            aw2016_init();
+            aw2016_wake();
+            // choose between rainbow_blend or rainbow_rgb
+            aw2016_rainbow_blend(255);    // change brightness separately below
+        }
+        #endif
+            
         uint8_t speed = 0x03;  // awake speed
         if (go_to_standby) speed = RGB_RAINBOW_SPEED;  // asleep speed
         if (0 == (arg & speed)) {
@@ -208,11 +233,32 @@ void rgb_led_update(uint8_t mode, uint16_t arg) {
             #ifdef USE_AUX1_LED
             button_led_result = 0;
             #endif
+            #ifdef USE_AUXRGB_LEDS_ADV
+            // to fix avoiding constant update
+            if (is_running_adv_rainbow && color !=8){
+                to_run_adv_rainbow = 0;
+            }  
+            if (is_running_adv_rainbow && color ==8){
+                aw2016_set_rgb_calibration(0,0,0);
+                if (adv_aux_sleep_countdown == 0){ aw2016_sleep(); }
+                else { adv_aux_sleep_countdown -= 1; }
+                // this is a hack to enable the pulsing rainbow mode within quirks of Anduril
+                // not an issue if in other modes (colours, disco, voltage)
+            }
+            #endif
             break;
         case 1:  // low
             result = actual_color;
             #ifdef USE_AUX1_LED
             button_led_result = 1;
+            #endif
+            #ifdef USE_AUXRGB_LEDS_ADV
+            if (is_running_adv_rainbow){
+                // driver quirk, reduce brightness without using LOW_LVL
+                aw2016_set_rgb_calibration(RED_LED_CAL_LOW_VAL,GRN_LED_CAL_LOW_VAL,BLU_LED_CAL_LOW_VAL);
+                aw2016_set_global_current(AW2016_ISET_5mA);
+                adv_aux_sleep_countdown = ADV_AUX_SLEEP_COUNTDOWN_TIMER;
+            }  // to fix avoiding constant update
             #endif
             break;
         default:  // high
@@ -220,9 +266,37 @@ void rgb_led_update(uint8_t mode, uint16_t arg) {
             #ifdef USE_AUX1_LED
             button_led_result = 2;
             #endif
+            #ifdef USE_AUXRGB_LEDS_ADV
+            if (is_running_adv_rainbow){
+                // driver quirk, reduce brightness without using HIGH_LVL
+                aw2016_set_rgb_calibration(RED_LED_CAL_VAL,GRN_LED_CAL_VAL,BLU_LED_CAL_VAL);
+                aw2016_set_global_current(AW2016_ISET_10mA);
+                adv_aux_sleep_countdown = ADV_AUX_SLEEP_COUNTDOWN_TIMER;
+            }  // to fix avoiding constant update
+            #endif
             break;
     }
+
+    #ifdef USE_AUXRGB_LEDS_ADV
+    if (to_run_adv_rainbow){;}  // do nothing
+
+    else{
+        // pattern is no longer rainbow
+        // reset driver if previously in rainbow
+        // otherwise, just update rgb colours
+        if (is_running_adv_rainbow){
+            is_running_adv_rainbow = 0;
+            aw2016_init();
+            aw2016_wake();
+            aw2016_enable_leds();
+        }
+        set_auxrgb_power(result);        // called in misc.c
+    }
+    to_run_adv_rainbow = 0;         // clear for the next cycle
+    #else
     set_auxrgb_power(result);
+    #endif
+
     #ifdef USE_AUX1_LED
     set_aux1_power(button_led_result);
     #endif

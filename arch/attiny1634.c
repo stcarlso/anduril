@@ -215,7 +215,7 @@ void mcu_set_aux1_power (uint8_t power) {
 }
 #endif
 
-#ifdef USE_AUXRGB_LEDS
+#if defined(USE_AUXRGB_LEDS) && !defined(USE_AUXRGB_LEDS_ADV)
 void mcu_set_auxrgb_power (uint8_t value) {
     // value: 0b00BBGGRR
     // each of RR/GG/BB is: 0/1/2 = off/low/high

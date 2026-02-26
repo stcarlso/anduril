@@ -131,8 +131,10 @@ inline void mcu_pcint_off();
 #define set_aux1_power  mcu_set_aux1_power
 void mcu_set_aux1_power (uint8_t power);
 
+#ifndef USE_AUXRGB_LEDS_ADV
 #define set_auxrgb_power  mcu_set_auxrgb_power
 void mcu_set_auxrgb_power (uint8_t value);
+#endif
 
 
 ////////// misc //////////

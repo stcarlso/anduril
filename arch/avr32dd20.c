@@ -271,7 +271,7 @@ void mcu_set_aux1_power (uint8_t power) {
 }
 #endif
 
-#ifdef USE_AUXRGB_LEDS
+#if defined(USE_AUXRGB_LEDS) && !defined(USE_AUXRGB_LEDS_ADV)
 #if 0  // cleaner, but also 63 bytes bigger
 void mcu_set_auxrgb_power (uint8_t value) {
     // value: 0b00BBGGRR

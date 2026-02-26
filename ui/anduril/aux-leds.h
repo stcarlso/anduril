@@ -6,6 +6,13 @@
 #if defined(USE_AUX1_LED) && defined(TICK_DURING_STANDBY)
 void aux1_led_update(uint8_t mode, uint8_t tick);
 #endif
+#if (defined(USE_AUXRGB_LEDS) && defined(USE_AUXRGB_LEDS_ADV)) && defined(TICK_DURING_STANDBY)
+uint8_t hsv_h = 0;
+uint8_t hsv_s = 255;
+uint8_t hsv_v = 0;
+uint8_t to_run_adv_rainbow = 0;     // temporary hack for advanced rainbow
+extern uint8_t is_running_adv_rainbow;
+#endif
 #if defined(USE_AUXRGB_LEDS) && defined(TICK_DURING_STANDBY)
 uint8_t setting_rgb_mode_now = 0;
 void rgb_led_update(uint8_t mode, uint16_t arg);

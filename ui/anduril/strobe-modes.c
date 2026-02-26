@@ -186,12 +186,18 @@ inline void strobe_state_iter() {
 
         #ifdef USE_POLICE_COLOR_STROBE_MODE
         case police_color_strobe_e:
+            #ifdef USE_AUXRGB_LEDS_ADV
+            adv_rgb_do_not_sleep = 1;
+            #endif
             police_color_strobe_iter();
             break;
         #endif
 
         #ifdef USE_LIGHTNING_MODE
         case lightning_storm_e:
+            #ifdef USE_AUXRGB_LEDS_ADV
+            adv_rgb_do_not_sleep = 0;
+            #endif
             lightning_storm_iter();
             break;
         #endif
