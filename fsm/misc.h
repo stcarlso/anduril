@@ -1,5 +1,6 @@
 // fsm-misc.h: Miscellaneous function for SpaghettiMonster.
 // Copyright (C) 2017-2023 Selene ToyKeeper
+//           (C) 2025-2026 Loneoceans
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #pragma once
@@ -59,6 +60,7 @@ void button_led_set(uint8_t lvl);
 // value: 0b00BBGGRR
 // each pair of bits: 0=off, 1=low, 2=high
 void rgb_led_set(uint8_t value);
+extern uint8_t is_running_adv_rainbow; // temporary hack for advanced rainbow
 #endif
 
 #ifdef USE_TRIANGLE_WAVE
