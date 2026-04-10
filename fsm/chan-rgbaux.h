@@ -3,6 +3,36 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #pragma once
 
+#ifdef USE_AUX_RGB_ADV
+#define RGB_ADV_LEVEL_OFF       0x00
+#define RGB_ADV_LEVEL_LOW       0x01
+#define RGB_ADV_LEVEL_HIGH      0x02
+#define RGB_ADV_LEVEL_BREATHING 0x03
+#define RGB_ADV_LEVEL_RAMP      0x04
+#define RGB_ADV_LEVEL_MASK      0x0F
+
+#define RGB_ADV_MODE_FIXED      0x00
+#define RGB_ADV_MODE_DISCO      0x01
+#define RGB_ADV_MODE_RAINBOW    0x02
+#define RGB_ADV_MODE_VOLTAGE    0x03
+#define RGB_ADV_MODE_SHIFT      4
+
+#define RGB_HUE_RED             0
+#define RGB_HUE_YELLOW          42
+#define RGB_HUE_GREEN           85
+#define RGB_HUE_CYAN            127
+#define RGB_HUE_BLUE            170
+#define RGB_HUE_PURPLE          212
+
+typedef struct {
+    uint8_t hue;
+    uint8_t sat;
+    uint8_t pat;
+} rgb_aux_setting_t;
+extern rgb_aux_setting_t aux_rgb_active;
+extern uint8_t aux_rgb_ramp_level;
+#endif
+
 #define RGB_AUX_ENUMS  \
     CM_AUXRED, \
     CM_AUXYEL, \

@@ -124,7 +124,6 @@ void aw2016_init(void)
     aw2016_set_manual_pattern_mode(AUX_CH_BLU,0);
 
     aw2016_set_global_brightness(AUX_HIGH_LVL_LEGACY);
-    aw2016_sleep();
 }
 
 void aw2016_set_rgb_calibration(uint8_t r, uint8_t g, uint8_t b)
@@ -219,23 +218,23 @@ void aw2016_set_hsv(uint8_t h, uint8_t s, uint8_t v)
     dim purple = hsv(200,80,100)
 */
 {
-    uint8_t region, remainder, p, q, t;
+    uint8_t p, region, q, t;
     uint8_t r, g, b;
+    uint16_t vv = (uint16_t)v, ss = (uint16_t)s, remainder;
 
     if (s == 0) {
         // achromatic grey-white
-        r = g = b = v;
-        aw2016_set_rgb(r, g, b);
+        aw2016_set_rgb(v, v, v);
         return;
     }
 
     // Hue sector: 0–5
     region = h / 43;    // 256 / 6 ≈ 43
-    remainder = (h - (region * 43)) * 6;
+    remainder = (uint16_t)((h - (region * 43U)) * 6U);
 
-    p = (v * (255 - s)) >> 8;
-    q = (v * (255 - ((s * remainder) >> 8))) >> 8;
-    t = (v * (255 - ((s * (255 - remainder)) >> 8))) >> 8;
+    p = (uint8_t)((vv * (255U - ss)) >> 8);
+    q = (uint8_t)((vv * (255U - ((ss * remainder) >> 8))) >> 8);
+    t = (uint8_t)((vv * (255U - ((ss * (255U - remainder)) >> 8))) >> 8);
 
     switch (region) {
         case 0:
@@ -295,16 +294,15 @@ void aw2016_test(void)
     aw2016_enable_leds();
 }
 
-void aw2016_rainbow_rgb(uint8_t pwm)
+void aw2016_rainbow_rgb(void)
 // rainbow fade but pausing at r,g and b
 {
+    aw2016_disable_leds();
+
     // set all three channels to manual mode 
     aw2016_set_manual_pattern_mode(AUX_CH_RED,0);
     aw2016_set_manual_pattern_mode(AUX_CH_GRN,0);
     aw2016_set_manual_pattern_mode(AUX_CH_BLU,0);
-
-    // set PWM levels (out of 255)
-    aw2016_set_global_brightness(pwm);
 
     // set T1/T2
     aw2016_write_reg(0x37+(AUX_CH_RED)*3, 0x66);
@@ -330,32 +328,103 @@ void aw2016_rainbow_rgb(uint8_t pwm)
     aw2016_enable_leds();
 }
 
-void aw2016_rainbow_blend(uint8_t pwm)
+void aw2016_rainbow_blend(uint8_t fast)
 // rainbow fade smoothly, pwm needs to be 255 to look good
 // use analog control to adjust brightness
 {
+    uint8_t dv;
+
+    aw2016_disable_leds();
+
     // set all three channels to manual mode 
     aw2016_set_manual_pattern_mode(AUX_CH_RED,0);
     aw2016_set_manual_pattern_mode(AUX_CH_GRN,0);
     aw2016_set_manual_pattern_mode(AUX_CH_BLU,0);
 
-    // set PWM levels (out of 255)
-    aw2016_set_global_brightness(pwm);
-
     // set T1/T2
-    aw2016_write_reg(0x37+(AUX_CH_RED)*3, 0x80);
-    aw2016_write_reg(0x37+(AUX_CH_GRN)*3, 0x80);
-    aw2016_write_reg(0x37+(AUX_CH_BLU)*3, 0x80);
+    dv = fast ? 0x40 : 0x80;
+    aw2016_write_reg(0x37+(AUX_CH_RED)*3, dv);
+    aw2016_write_reg(0x37+(AUX_CH_GRN)*3, dv);
+    aw2016_write_reg(0x37+(AUX_CH_BLU)*3, dv);
 
     // set T3/T4
-    aw2016_write_reg(0x38+(AUX_CH_RED)*3, 0x88);
-    aw2016_write_reg(0x38+(AUX_CH_GRN)*3, 0x88);
-    aw2016_write_reg(0x38+(AUX_CH_BLU)*3, 0x88);
+    dv = fast ? 0x44 : 0x88;
+    aw2016_write_reg(0x38+(AUX_CH_RED)*3, dv);
+    aw2016_write_reg(0x38+(AUX_CH_GRN)*3, dv);
+    aw2016_write_reg(0x38+(AUX_CH_BLU)*3, dv);
 
     // set T0/Repeat
     aw2016_write_reg(0x39+(AUX_CH_RED)*3, 0x00);
-    aw2016_write_reg(0x39+(AUX_CH_GRN)*3, 0x80);
-    aw2016_write_reg(0x39+(AUX_CH_BLU)*3, 0xB0);
+    aw2016_write_reg(0x39+(AUX_CH_GRN)*3, fast ? 0x40 : 0x80);
+    aw2016_write_reg(0x39+(AUX_CH_BLU)*3, fast ? 0x60 : 0xB0);
+
+    // set all three channels to pattern mode 
+    aw2016_set_manual_pattern_mode(AUX_CH_RED,1);
+    aw2016_set_manual_pattern_mode(AUX_CH_GRN,1);
+    aw2016_set_manual_pattern_mode(AUX_CH_BLU,1);
+
+    // enable leds
+    aw2016_enable_leds();
+}
+
+void aw2016_breathing_mode(void)
+// breathing mode fade in and out
+{
+    aw2016_disable_leds();
+
+    // set all three channels to manual mode 
+    aw2016_set_manual_pattern_mode(AUX_CH_RED,0);
+    aw2016_set_manual_pattern_mode(AUX_CH_GRN,0);
+    aw2016_set_manual_pattern_mode(AUX_CH_BLU,0);
+
+    // set T1/T2
+    aw2016_write_reg(0x37+(AUX_CH_RED)*3, 0x50);
+    aw2016_write_reg(0x37+(AUX_CH_GRN)*3, 0x50);
+    aw2016_write_reg(0x37+(AUX_CH_BLU)*3, 0x50);
+
+    // set T3/T4
+    aw2016_write_reg(0x38+(AUX_CH_RED)*3, 0x58);
+    aw2016_write_reg(0x38+(AUX_CH_GRN)*3, 0x58);
+    aw2016_write_reg(0x38+(AUX_CH_BLU)*3, 0x58);
+
+    // set T0/Repeat
+    aw2016_write_reg(0x39+(AUX_CH_RED)*3, 0x00);
+    aw2016_write_reg(0x39+(AUX_CH_GRN)*3, 0x00);
+    aw2016_write_reg(0x39+(AUX_CH_BLU)*3, 0x00);
+
+    // set all three channels to pattern mode 
+    aw2016_set_manual_pattern_mode(AUX_CH_RED,1);
+    aw2016_set_manual_pattern_mode(AUX_CH_GRN,1);
+    aw2016_set_manual_pattern_mode(AUX_CH_BLU,1);
+
+    // enable leds
+    aw2016_enable_leds();
+}
+
+void aw2016_blinking_mode(void)
+// blinking mode, breathing on random colors sadly breaks due to AW2016 timer issues
+{
+    aw2016_disable_leds();
+
+    // set all three channels to manual mode 
+    aw2016_set_manual_pattern_mode(AUX_CH_RED,0);
+    aw2016_set_manual_pattern_mode(AUX_CH_GRN,0);
+    aw2016_set_manual_pattern_mode(AUX_CH_BLU,0);
+
+    // set T1/T2
+    aw2016_write_reg(0x37+(AUX_CH_RED)*3, 0x03);
+    aw2016_write_reg(0x37+(AUX_CH_GRN)*3, 0x03);
+    aw2016_write_reg(0x37+(AUX_CH_BLU)*3, 0x03);
+
+    // set T3/T4
+    aw2016_write_reg(0x38+(AUX_CH_RED)*3, 0x08);
+    aw2016_write_reg(0x38+(AUX_CH_GRN)*3, 0x08);
+    aw2016_write_reg(0x38+(AUX_CH_BLU)*3, 0x08);
+
+    // set T0/Repeat
+    aw2016_write_reg(0x39+(AUX_CH_RED)*3, 0x00);
+    aw2016_write_reg(0x39+(AUX_CH_GRN)*3, 0x00);
+    aw2016_write_reg(0x39+(AUX_CH_BLU)*3, 0x00);
 
     // set all three channels to pattern mode 
     aw2016_set_manual_pattern_mode(AUX_CH_RED,1);

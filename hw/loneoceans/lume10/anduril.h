@@ -87,21 +87,25 @@
 #define HALFSPEED_LEVEL 42
 #define QUARTERSPEED_LEVEL 36   // check with TK about the mechanics of this
 
-#define DEFAULT_LEVEL 65        // about same as 1 AMC7135 
+#define DEFAULT_LEVEL 36
 #define MAX_1x7135 65           // about ~350mA
 // MIN_THERM_STEPDOWN defined as MAX_1x7135 in ramp-mode.h if not otherwise defined
 
-#define RAMP_SMOOTH_FLOOR 7     // about ~50uA ~0.015lm 
-                                // lvl 8 about ~85uA, ~0.03lm, lowest is 100nA 
-#define RAMP_SMOOTH_CEIL 149    // about ~10A
+#define RAMP_SMOOTH_FLOOR 8     // ~0.04 lumens M2? Math says 7 but visually looks like 9
+#define RAMP_SMOOTH_CEIL 120    // 5.75A - should be ~3500 lumens M2 or 5klm P4
 
+// 8 [36] 64 92 120
 #define RAMP_DISCRETE_FLOOR RAMP_SMOOTH_FLOOR
 #define RAMP_DISCRETE_CEIL RAMP_SMOOTH_CEIL
-#define RAMP_DISCRETE_STEPS 6
+#define RAMP_DISCRETE_STEPS 5
 
-#define SIMPLE_UI_FLOOR 14      // about ~800uA ~.25lm
-#define SIMPLE_UI_CEIL 131      // about ~6A
+// 8 [36] 64 92 120
+#define SIMPLE_UI_FLOOR RAMP_SMOOTH_FLOOR      // should be 10, but visually looks ~16? ~0.13 lumens M2?
+#define SIMPLE_UI_CEIL RAMP_SMOOTH_CEIL      // Should be ~3A, ~2050 lumens M2 or 3klm P4
 #define SIMPLE_UI_STEPS 5
+
+#define DEFAULT_MANUAL_MEMORY 36
+#define DEFAULT_MANUAL_MEMORY_TIMER 5
 
 // don't blink mid-ramp
 #ifdef BLINK_AT_RAMP_MIDDLE
@@ -200,8 +204,10 @@
 #ifdef RGB_LED_OFF_DEFAULT
 #undef RGB_LED_OFF_DEFAULT
 #endif
-#define RGB_LED_OFF_DEFAULT     0x18    // low, rainbow
-#define RGB_LED_LOCKOUT_DEFAULT 0x37    // blinking, rainbow
+
+// Aux LEDs: Low Batt Check (Standby) / Breathing Red (Locked out)
+#define RGB_LED_OFF_DEFAULT { .hue = 0, .sat = 255, .pat = 0x31 }
+#define RGB_LED_LOCKOUT_DEFAULT { .hue = 0, .sat = 255, .pat = 0x03 }
 
 // enable blinking aux LEDs
 #define TICK_DURING_STANDBY
@@ -214,7 +220,7 @@
 #define USE_SOS_MODE_IN_BLINKY_GROUP
 
 // enable Beacontower blinky mode (after SOS)
-#define USE_BEACONTOWER_MODE
+//#define USE_BEACONTOWER_MODE
 
 // party strobe on-time
 #define PARTY_STROBE_ONTIME 1

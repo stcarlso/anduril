@@ -20,12 +20,12 @@ inline void set_level_aux_leds(uint8_t level) {
         }
     #else  // turn off front-facing aux LEDs while main LEDs are on
         #if defined(USE_INDICATOR_LED) || defined(USE_AUX_RGB_LEDS)
-        if (! go_to_standby) {
+        if (! go_to_standby){
             #ifdef USE_INDICATOR_LED
                 indicator_led(0);
             #endif
             #ifdef USE_AUX_RGB_LEDS
-                rgb_led_set(0);
+                if (!channel_uses_aux(channel_mode)) rgb_led_off();
                 #ifdef USE_BUTTON_LED
                     button_led_set((level > 0) + (level > DEFAULT_LEVEL));
                 #endif
@@ -78,6 +78,10 @@ void set_level(uint8_t level) {
     #ifdef USE_ULTRA_LOW_MODE
             && (cfg.ultra_low_mode == level_1_default || level > 1)
     #endif
+            // don't jump start the aux
+    #ifdef USE_CHANNEL_USES_AUX
+            && (!channel_uses_aux(channel_mode))
+    #endif
             && (level < JUMP_START_LEVEL)) {
         set_level(JUMP_START_LEVEL);
         delay_4ms(JUMP_START_TIME/4);
@@ -101,7 +105,7 @@ void set_level(uint8_t level) {
     #if defined(USE_ULTRA_LOW_MODE) && defined(USE_AUX_RGB_LEDS)
     if (cfg.ultra_low_mode == level_1_redaux && actual_level == 1) {
         // turn off red aux if previously in moon on red
-        rgb_led_set(0);
+        rgb_led_off();
     }
     #endif
 
@@ -109,7 +113,7 @@ void set_level(uint8_t level) {
         set_level_zero();
         #if(defined(USE_CHANNEL_USES_AUX) && defined(USE_AUX_RGB_LEDS))
             if (channel_uses_aux(channel_mode)){
-                rgb_led_set(0);
+                rgb_led_off();
             }
         #endif
     } else {

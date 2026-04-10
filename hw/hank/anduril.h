@@ -11,10 +11,13 @@
 #ifdef RGB_LED_OFF_DEFAULT
 #undef RGB_LED_OFF_DEFAULT
 #endif
+
+#ifndef USE_AUX_RGB_ADV
 // low, cyan
 #define RGB_LED_OFF_DEFAULT 0x13
 // low, red
 #define RGB_LED_LOCKOUT_DEFAULT 0x10
+#endif
 
 // half a second per color in rainbow mode
 #define RGB_RAINBOW_SPEED 0x03

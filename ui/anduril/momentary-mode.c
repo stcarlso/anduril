@@ -57,7 +57,7 @@ uint8_t momentary_state(Event event, uint16_t arg) {
             #ifdef USE_INDICATOR_LED
                 indicator_led(0);
             #elif defined(USE_AUX_RGB_LEDS)
-                rgb_led_set(0);
+                rgb_led_off();
             #endif
             #ifdef USE_BUTTON_LED
                 button_led_set(0);

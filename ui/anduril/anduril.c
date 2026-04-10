@@ -96,8 +96,13 @@
 #include "anduril/config-mode.h"
 #include "anduril/misc.h"
 
-#if defined(USE_AUX_RGB_LEDS) && !defined(USE_AUX_RGB_ADV)
+#if !defined(USE_AUX_RGB_ADV)
 #include "anduril/aux-leds.h"
+#endif
+
+#ifdef USE_AUX_RGB_ADV
+#include "peripherals/aw2016/aw2016.h"
+#include "anduril/aux-leds-adv.h"
 #endif
 
 #ifdef USE_SUNSET_TIMER
@@ -153,11 +158,6 @@
 #include "anduril/smooth-steps.h"
 #endif
 
-#ifdef USE_AUX_RGB_ADV
-#include "peripherals/aw2016/aw2016.h"
-#include "anduril/aux-leds-adv.h"
-#endif
-
 // this should be last, so other headers have a chance to declare values
 #include "anduril/load-save-config.h"
 
@@ -172,7 +172,7 @@
 #include "anduril/config-mode.c"
 #include "anduril/misc.c"
 
-#if defined(USE_AUX_RGB_LEDS) && !defined(USE_AUX_RGB_ADV)
+#if !defined(USE_AUX_RGB_ADV)
 #include "anduril/aux-leds.c"
 #endif
 
@@ -246,6 +246,7 @@ void setup() {
     #ifdef USE_AUX_RGB_ADV
     // initialize Adv Aux
     aw2016_init();
+    aw2016_sleep();
     #endif
 
     #ifndef START_AT_MEMORIZED_LEVEL

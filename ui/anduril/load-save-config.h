@@ -146,8 +146,13 @@ Config cfg = {
         .indicator_led_mode = INDICATOR_LED_DEFAULT_MODE,
     #endif
     #ifdef USE_AUX_RGB_LEDS
+        #ifdef USE_AUX_RGB_ADV
+        .rgb_led_off = RGB_LED_OFF_DEFAULT,
+        .rgb_led_lockout = RGB_LED_LOCKOUT_DEFAULT,
+        #else
         .rgb_led_off_mode = RGB_LED_OFF_DEFAULT,
         .rgb_led_lockout_mode = RGB_LED_LOCKOUT_DEFAULT,
+        #endif
         #ifdef USE_POST_OFF_VOLTAGE
             // display voltage readout for a while after turning off?
             .post_off_voltage = DEFAULT_POST_OFF_VOLTAGE_SECONDS,

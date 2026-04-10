@@ -39,7 +39,9 @@ void aw2016_disable_leds(void);
 
 // pre-built effects
 void aw2016_test(void);
-void aw2016_rainbow_rgb(uint8_t pwm);
-void aw2016_rainbow_blend(uint8_t pwm);
+void aw2016_rainbow_rgb(void);
+void aw2016_rainbow_blend(uint8_t fast);
+void aw2016_breathing_mode(void);
+void aw2016_blinking_mode(void);
 
 #endif
