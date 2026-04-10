@@ -57,10 +57,15 @@ void button_led_set(uint8_t lvl);
 #endif
 
 #ifdef USE_AUX_RGB_LEDS
-// value: 0b00BBGGRR
-// each pair of bits: 0=off, 1=low, 2=high
-void rgb_led_set(uint8_t value);
-extern uint8_t is_running_adv_rainbow; // temporary hack for advanced rainbow
+    #ifdef USE_AUX_RGB_ADV
+    void rgb_led_off(void);
+    void rgb_led_set(uint8_t force);
+    #else
+    // value: 0b00BBGGRR
+    // each pair of bits: 0=off, 1=low, 2=high
+    #define rgb_led_off() rgb_led_set(0)
+    void rgb_led_set(uint8_t value);
+    #endif
 #endif
 
 #ifdef USE_TRIANGLE_WAVE

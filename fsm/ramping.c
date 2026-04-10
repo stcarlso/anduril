@@ -31,7 +31,7 @@ inline void set_level_aux_leds(uint8_t level) {
                 indicator_led(0);
             #endif
             #ifdef USE_AUX_RGB_LEDS
-                rgb_led_set(0);
+                rgb_led_off();
                 #ifdef USE_BUTTON_LED
                     button_led_set(AUX_BRIGHTNESS);
                 #endif

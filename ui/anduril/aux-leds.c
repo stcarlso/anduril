@@ -104,7 +104,7 @@ void rgb_led_update(uint8_t mode, uint16_t arg) {
     #else
     if ((volts) && (volts < VOLTAGE_LOW)) {
     #endif
-        rgb_led_set(0);
+        rgb_led_off();
         #ifdef USE_BUTTON_LED
         button_led_set(0);
         #endif

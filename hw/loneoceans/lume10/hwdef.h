@@ -133,7 +133,7 @@ enum CHANNEL_MODES {
 // use i2c aux led driver
 #ifdef USE_AUX_RGB_ADV
 
-#include "pheripherals/aw2016/aw2016.h"
+#include "peripherals/aw2016/aw2016.h"
 #define TWI_TIMEOUT 50000
 #define TWI_BAUD(F_SCL) ((((F_CPU / F_SCL) - 10) / 2))
 

@@ -200,8 +200,11 @@
 #ifdef RGB_LED_OFF_DEFAULT
 #undef RGB_LED_OFF_DEFAULT
 #endif
-#define RGB_LED_OFF_DEFAULT     0x18    // low, rainbow
-#define RGB_LED_LOCKOUT_DEFAULT 0x37    // blinking, rainbow
+
+// low rainbow
+#define RGB_LED_OFF_DEFAULT { .hue = 0, .sat = 255, .pat = 0x21 }
+// breathing red
+#define RGB_LED_LOCKOUT_DEFAULT { .hue = 0, .sat = 255, .pat = 0x03 }
 
 // enable blinking aux LEDs
 #define TICK_DURING_STANDBY

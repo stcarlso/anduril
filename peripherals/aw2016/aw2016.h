@@ -5,7 +5,7 @@
 #ifndef AW2016_H
 
 #define AW2016_H
-#define AW2016_C  pheripherals/aw2016/aw2016.c
+#define AW2016_C  peripherals/aw2016/aw2016.c
 #define AW2016_ADDR 0x64
 
 #include <stdint.h>
@@ -39,7 +39,9 @@ void aw2016_disable_leds(void);
 
 // pre-built effects
 void aw2016_test(void);
-void aw2016_rainbow_rgb(uint8_t pwm);
-void aw2016_rainbow_blend(uint8_t pwm);
+void aw2016_rainbow_rgb(void);
+void aw2016_rainbow_blend(uint8_t fast);
+void aw2016_breathing_mode(void);
+void aw2016_blinking_mode(void);
 
 #endif

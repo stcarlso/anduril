@@ -152,14 +152,11 @@
 #undef USE_INDICATOR_LED_WHILE_RAMPING
 #endif
 
-// RGB aux LEDs should use rainbow cycling mode
+// RGB aux LEDs should use rainbow mode when off
 // to impress new customers
 // (people usually change it to voltage mode later though)
-#ifdef RGB_LED_OFF_DEFAULT
-#undef RGB_LED_OFF_DEFAULT
-#endif
-#define RGB_LED_OFF_DEFAULT     0x18    // low, rainbow
-#define RGB_LED_LOCKOUT_DEFAULT 0x37    // blinking, rainbow
+#define RGB_LED_OFF_DEFAULT { .hue = 0, .sat = 255, .pat = 0x21 }
+#define RGB_LED_LOCKOUT_DEFAULT { .hue = 0, .sat = 255, .pat = 0x03 }
 
 // enable blinking aux LEDs
 //#define TICK_DURING_STANDBY

@@ -77,6 +77,8 @@ uint8_t off_state(Event event, uint16_t arg) {
         #endif  // ifdef USE_MANUAL_MEMORY_TIMER
         #ifdef USE_INDICATOR_LED
         indicator_led_update(cfg.indicator_led_mode & 0x03, arg);
+        #elif defined(USE_AUX_RGB_ADV)
+        rgb_led_update(&(cfg.rgb_led_off), arg);
         #elif defined(USE_AUX_RGB_LEDS)
         rgb_led_update(cfg.rgb_led_off_mode, arg);
         #endif
@@ -298,10 +300,15 @@ uint8_t off_state(Event event, uint16_t arg) {
     #elif defined(USE_AUX_RGB_LEDS)
     // 7 clicks: change RGB aux LED pattern
     else if (event == EV_7clicks) {
-        uint8_t mode = (cfg.rgb_led_off_mode >> 4) + 1;
-        mode = mode % RGB_LED_NUM_PATTERNS;
-        cfg.rgb_led_off_mode = (mode << 4) | (cfg.rgb_led_off_mode & 0x0f);
-        rgb_led_update(cfg.rgb_led_off_mode, 0);
+        #ifdef USE_AUX_RGB_ADV
+            rgb_led_advance_level(&(cfg.rgb_led_off));
+            rgb_led_update(&(cfg.rgb_led_off), 0);
+        #else
+            uint8_t mode = (cfg.rgb_led_off_mode >> 4) + 1;
+            mode = mode % RGB_LED_NUM_PATTERNS;
+            cfg.rgb_led_off_mode = (mode << 4) | (cfg.rgb_led_off_mode & 0x0f);
+            rgb_led_update(cfg.rgb_led_off_mode, 0);
+        #endif
         save_config();
         blink_once();
         return EVENT_HANDLED;
@@ -309,13 +316,17 @@ uint8_t off_state(Event event, uint16_t arg) {
     // 7 clicks (hold last): change RGB aux LED color
     else if (event == EV_click7_hold) {
         setting_rgb_mode_now = 1;
-        if (0 == (arg & 0x3f)) {
-            uint8_t mode = (cfg.rgb_led_off_mode & 0x0f) + 1;
-            mode = mode % RGB_LED_NUM_COLORS;
-            cfg.rgb_led_off_mode = mode | (cfg.rgb_led_off_mode & 0xf0);
-            //save_config();
-        }
-        rgb_led_update(cfg.rgb_led_off_mode, arg);
+        #ifdef USE_AUX_RGB_ADV
+            rgb_led_advance_color(&(cfg.rgb_led_off), arg);
+            rgb_led_update(&(cfg.rgb_led_off), arg);
+        #else
+            if (0 == (arg & 0x3f)) {
+                uint8_t mode = (cfg.rgb_led_off_mode & 0x0f) + 1;
+                mode = mode % RGB_LED_NUM_COLORS;
+                cfg.rgb_led_off_mode = mode | (cfg.rgb_led_off_mode & 0xf0);
+            }
+            rgb_led_update(cfg.rgb_led_off_mode, arg);
+        #endif
         return EVENT_HANDLED;
     }
     else if (event == EV_click7_hold_release) {
