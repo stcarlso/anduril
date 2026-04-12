@@ -13,6 +13,8 @@ uint8_t *eeprom;
 uint8_t eeprom[EEPROM_BYTES];
 #endif
 
+static uint8_t EEMEM eeprom_ref[EEPROM_BYTES];
+
 uint8_t load_eeprom() {
     #ifdef USE_EEP_DELAY
     delay_4ms(2);  // wait for power to stabilize
@@ -20,13 +22,11 @@ uint8_t load_eeprom() {
 
     cli();
     // check if eeprom has been initialized; abort if it hasn't
-    uint8_t marker = eeprom_read_byte((uint8_t *)EEP_START);
+    uint8_t marker = eeprom_read_byte(&eeprom_ref[EEP_START]);
     if (marker != EEP_MARKER) { sei(); return 0; }
 
     // load the actual data
-    for(uint8_t i=0; i<EEPROM_BYTES; i++) {
-        eeprom[i] = eeprom_read_byte((uint8_t *)(EEP_START+1+i));
-    }
+    eeprom_read_block(eeprom, &eeprom_ref[EEP_START+1], EEPROM_BYTES);
     sei();
     return 1;
 }
@@ -39,19 +39,18 @@ void save_eeprom() {
     cli();
 
     // save the actual data
-    for(uint8_t i=0; i<EEPROM_BYTES; i++) {
-        eeprom_update_byte((uint8_t *)(EEP_START+1+i), eeprom[i]);
-    }
+    eeprom_update_block(eeprom, &eeprom_ref[EEP_START+1], EEPROM_BYTES);
 
     // save the marker last, to indicate the transaction is complete
-    eeprom_update_byte((uint8_t *)EEP_START, EEP_MARKER);
+    eeprom_update_byte(&eeprom_ref[EEP_START], EEP_MARKER);
     sei();
 }
 #endif
 
 #ifdef USE_EEPROM_WL
 uint8_t eeprom_wl[EEPROM_WL_BYTES];
-uint8_t * eep_wl_prev_offset;
+/* Could be up to 512 */
+uint16_t eep_wl_prev_offset;
 
 uint8_t load_eeprom_wl() {
     #ifdef USE_EEP_DELAY
@@ -61,11 +60,11 @@ uint8_t load_eeprom_wl() {
     cli();
     // check if eeprom has been initialized; abort if it hasn't
     uint8_t found = 0;
-    uint8_t * offset;
+    uint8_t offset;
     for(offset = 0;
-        offset < (uint8_t *)(EEP_WL_SIZE - EEPROM_WL_BYTES - 1);
+        offset < EEP_WL_SIZE - EEPROM_WL_BYTES - 1;
         offset += (EEPROM_WL_BYTES + 1)) {
-        if (eeprom_read_byte(offset) == EEP_MARKER) {
+        if (eeprom_read_byte(&eeprom_ref[offset]) == EEP_MARKER) {
             found = 1;
             eep_wl_prev_offset = offset;
             break;
@@ -74,9 +73,7 @@ uint8_t load_eeprom_wl() {
 
     if (found) {
         // load the actual data
-        for(uint8_t i=0; i<EEPROM_WL_BYTES; i++) {
-            eeprom_wl[i] = eeprom_read_byte(offset+1+i);
-        }
+        eeprom_read_block(eeprom_wl, &eeprom_ref[offset+1], EEPROM_WL_BYTES);
     }
     sei();
     return found;
@@ -89,23 +86,20 @@ void save_eeprom_wl() {
 
     cli();
     // erase old state
-    uint8_t * offset = eep_wl_prev_offset;
+    uint8_t offset = eep_wl_prev_offset;
     for (uint8_t i = 0; i < EEPROM_WL_BYTES+1; i ++) {
-        eeprom_update_byte(offset+i, 0xFF);
+        eeprom_update_byte(&eeprom_ref[offset + i], 0xFF);
     }
 
     // save new state
     offset += EEPROM_WL_BYTES+1;
-    if (offset > (uint8_t *)(EEP_WL_SIZE-EEPROM_WL_BYTES-1)) offset = 0;
+    if (offset > (EEP_WL_SIZE-EEPROM_WL_BYTES-1)) offset = 0;
     eep_wl_prev_offset = offset;
     // marker byte
     // FIXME: write the marker last, to signal completed transaction
-    eeprom_update_byte(offset, EEP_MARKER);
-    offset ++;
+    eeprom_update_byte(&eeprom_ref[offset], EEP_MARKER);
     // user data
-    for(uint8_t i=0; i<EEPROM_WL_BYTES; i++, offset++) {
-        eeprom_update_byte(offset, eeprom_wl[i]);
-    }
+    eeprom_update_block(eeprom_wl, &eeprom_ref[offset+1], EEPROM_WL_BYTES);
     sei();
 }
 #endif
