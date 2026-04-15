@@ -53,6 +53,16 @@ uint8_t lockout_state(Event event, uint16_t arg) {
                 push_state(smooth_povd_state, 0);
             }
         #elif defined(USE_AUXRGB_LEDS)
+            // Adv. Aux Rainbow handling 
+            #ifdef USE_AUXRGB_LEDS_ADV
+            uint8_t color = cfg.auxrgb_lockout_mode & 0x0f;
+            uint8_t pattern = (cfg.auxrgb_lockout_mode>>4);
+            if (color != 8 && pattern ==0){
+                is_running_adv_rainbow = 0;
+                aw2016_init();
+            }
+            #endif
+
             rgb_led_update(cfg.auxrgb_lockout_mode, 0);
         #elif defined(USE_AUX1_LED)
             // redundant, sleep tick does the same thing
