@@ -22,6 +22,13 @@ Model     MCU         Name
 0142      attiny85    hank-emisar-d18-219
 0143      attiny1634  hank-noctigon-m44
 0151      attiny1634  hank-emisar-d4k-3ch
+0200      avr32dd20   hank-lume-n1-32A    (32A fusion)
+0201      avr32dd20   hank-lume-n1        (24A fusion)
+0202      avr32dd20   hank-lume-n1-16A    (16A fusion)
+0203      avr32dd20   hank-lume-n1-11A    (11A fusion)
+0204      avr32dd20   hank-lume-n1-9A     (9A fusion)
+0205      avr32dd20   hank-lume-n1-7A5    (7.5A fusion)
+0206      avr32dd20   hank-lume-n1-6A     (6.0A buck)
 0211      attiny1634  hank-noctigon-kr4
 0212      attiny1634  hank-noctigon-kr4-nofet
 0213      attiny1634  hank-noctigon-kr4-219
@@ -41,8 +48,10 @@ Model     MCU         Name
 0272      attiny1634  hank-noctigon-dm11-nofet
 0273      attiny1634  hank-noctigon-dm11-boost
 0274      attiny1634  hank-noctigon-dm11-sbt90
-0281      avr32dd20   hank-lume-x1 (40W boost)
-0282      avr32dd20   hank-lume-x1-32w (32W boost)
+0281      avr32dd20   hank-lume-x1        (40W boost)
+0282      avr32dd20   hank-lume-x1-32w    (32W boost)
+0283      avr32dd20   hank-lume-x1-c      (40W boost)
+0284      avr32dd20   hank-lume-x1-c-32w  (32W boost)
 0311      attiny85    lumintop-fw3a
 0312      attiny85    lumintop-fw3a-219
 0313      attiny85    lumintop-fw3a-nofet
@@ -57,14 +66,15 @@ Model     MCU         Name
 0422      attiny85    fireflies-pl47-219
 0423      attiny85    fireflies-pl47g2
 0441      attiny85    fireflies-e01
-0443      attiny1634  fireflies-lume1-2020       (E07X, E12R, NOV-mu, etc)
-0444      attiny1634  fireflies-lume1-2020-nofet (T9R, T1R, etc)
+0443      attiny1634  fireflies-lume1-2020        (6A buck)
+0444      attiny1634  fireflies-lume1-2020-nofet  (6A buck + FET)
 0445      attiny85    fireflies-e12c
-0451      attiny1616  fireflies-lume1-6af        (E07X, E12R, NOV-Mu, etc)
-0452      attiny1616  fireflies-lume1-6af-nofet  (T9R, T1R, etc)
-0461      attiny1616  fireflies-lume-x1-40w      (X1S, X1L, etc)
-0462      avr32dd20   fireflies-lume-x1-avr32dd20 (X4Q, X1Q, etc)
-0463      avr32dd20   fireflies-lume-x1-avr32dd20-32w (L50, etc)
+0451      attiny1616  fireflies-lume1-6af         (6A buck + FET)
+0452      attiny1616  fireflies-lume1-6af-nofet   (6A buck)
+0453      avr32dd20   fireflies-lume10            (10A buck + FET)
+0461      attiny1616  fireflies-lume-x1-40w       (40W boost)
+0462      avr32dd20   fireflies-lume-x1-avr32dd20 (40W boost)
+0463      avr32dd20   fireflies-lume-x1-avr32dd20-32w (32W boost)
 0511      attiny85    mateminco-mf01s
 0521      attiny85    mateminco-mf01-mini
 0531      attiny85    mateminco-mt35-mini
@@ -90,8 +100,12 @@ Model     MCU         Name
 4201      attiny1616  loneoceans-lume1-6af (6A buck + FET)
 4202      attiny1634  loneoceans-lume1-2020 (6A buck + FET, 2020 ver.)
 4203      avr32dd20   loneoceans-lume1-15af (15A buck + FET)
+4204      avr32dd20   loneoceans-lume10 (10A buck + FET) Adv. Aux
 4211      attiny1616  loneoceans-lume-x1-40w (40W boost)
 4212      avr32dd20   loneoceans-lume-x1-avr32dd20 (40W boost)
+4213      avr32dd20   loneoceans-lume-x1-avr32dd20 (48W boost)
+4214      avr32dd20   loneoceans-lume-x1-c (40W boost) Adv. Aux
+4220      avr32dd20   loneoceans-lume-n1   (24A fusion) Adv. Aux
 
 Duplicates:
 
