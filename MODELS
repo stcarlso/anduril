@@ -57,6 +57,7 @@ Model     MCU         Name
 0272      attiny1634  hank-noctigon-dm11-nofet
 0273      attiny1634  hank-noctigon-dm11-boost
 0274      attiny1634  hank-noctigon-dm11-sbt90
+0275      attiny1634  hank-emisar-d1v2-b35am
 0281      avr32dd20   hank-lume-x1        (40W boost)
 0282      avr32dd20   hank-lume-x1-32w    (32W boost)
 0283      avr32dd20   hank-lume-x1-c      (40W boost)
