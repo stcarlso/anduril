@@ -81,6 +81,55 @@ uint8_t aw2016_next_ramp_row (uint8_t row, bool nopwm) {
 
 ////////// common auxrgb API stuff //////////
 
+void aw2016_set_level_auxred (uint8_t level) {
+    RGB8_t color = { .r = level, .g = 0, .b = 0 };
+
+    aw2016_set_auxrgb_pwm(color);
+    aw2016_set_ramp_current(AW2016_DEFAULT_ON);
+}
+
+void aw2016_set_level_auxyel (uint8_t level) {
+    RGB8_t color = { .r = level, .g = level, .b = 0 };
+
+    aw2016_set_auxrgb_pwm(color);
+    aw2016_set_ramp_current(AW2016_DEFAULT_ON);
+}
+
+void aw2016_set_level_auxgrn (uint8_t level) {
+    RGB8_t color = { .r = 0, .g = level, .b = 0 };
+
+    aw2016_set_auxrgb_pwm(color);
+    aw2016_set_ramp_current(AW2016_DEFAULT_ON);
+}
+
+void aw2016_set_level_auxcyn (uint8_t level) {
+    RGB8_t color = { .r = 0, .g = level, .b = level };
+
+    aw2016_set_auxrgb_pwm(color);
+    aw2016_set_ramp_current(AW2016_DEFAULT_ON);
+}
+
+void aw2016_set_level_auxblu (uint8_t level) {
+    RGB8_t color = { .r = 0, .g = 0, .b = level };
+
+    aw2016_set_auxrgb_pwm(color);
+    aw2016_set_ramp_current(AW2016_DEFAULT_ON);
+}
+
+void aw2016_set_level_auxprp (uint8_t level) {
+    RGB8_t color = { .r = level, .g = 0, .b = level };
+
+    aw2016_set_auxrgb_pwm(color);
+    aw2016_set_ramp_current(AW2016_DEFAULT_ON);
+}
+
+void aw2016_set_level_auxwht (uint8_t level) {
+    RGB8_t color = { .r = level, .g = level, .b = level };
+
+    aw2016_set_auxrgb_pwm(color);
+    aw2016_set_ramp_current(AW2016_DEFAULT_ON);
+}
+
 // set a color and brightness in "passive" auxrgb mode
 // power: 0b00BBGGRR
 void aw2016_set_auxrgb_power (uint8_t power) {
