@@ -103,6 +103,51 @@ void aw2016_rainbow_blend ();
 
 ////////// common auxrgb API stuff //////////
 
+#define AW2016_AUXRGB_CHANNELS \
+    { \
+        .set_level    = aw2016_set_level_auxred, \
+        .gradual_tick = gradual_tick_null \
+        AUXRGB_FLAGS \
+    }, \
+    { \
+        .set_level    = aw2016_set_level_auxyel, \
+        .gradual_tick = gradual_tick_null \
+        AUXRGB_FLAGS \
+    }, \
+    { \
+        .set_level    = aw2016_set_level_auxgrn, \
+        .gradual_tick = gradual_tick_null \
+        AUXRGB_FLAGS \
+    }, \
+    { \
+        .set_level    = aw2016_set_level_auxcyn, \
+        .gradual_tick = gradual_tick_null \
+        AUXRGB_FLAGS \
+    }, \
+    { \
+        .set_level    = aw2016_set_level_auxblu, \
+        .gradual_tick = gradual_tick_null \
+        AUXRGB_FLAGS \
+    }, \
+    { \
+        .set_level    = aw2016_set_level_auxprp, \
+        .gradual_tick = gradual_tick_null \
+        AUXRGB_FLAGS \
+    }, \
+    { \
+        .set_level    = aw2016_set_level_auxwht, \
+        .gradual_tick = gradual_tick_null \
+        AUXRGB_FLAGS \
+    }
+
+void aw2016_set_level_auxred (uint8_t level);
+void aw2016_set_level_auxyel (uint8_t level);
+void aw2016_set_level_auxgrn (uint8_t level);
+void aw2016_set_level_auxcyn (uint8_t level);
+void aw2016_set_level_auxblu (uint8_t level);
+void aw2016_set_level_auxprp (uint8_t level);
+void aw2016_set_level_auxwht (uint8_t level);
+
 // emulate passive auxrgb
 #undef set_auxrgb_power
 #define set_auxrgb_power  aw2016_set_auxrgb_power

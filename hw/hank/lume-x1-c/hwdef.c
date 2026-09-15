@@ -30,7 +30,7 @@ Channel channels[] = {
         .gradual_tick = gradual_tick_hsv,
         .flags        = CHANNEL_FLAG_IS_AUX | CHANNEL_FLAG_HAS_ARGS
     },
-    AUXRGB_CHANNELS
+    AW2016_AUXRGB_CHANNELS
 };
 
 // HSV mode needs a different 3H handler
